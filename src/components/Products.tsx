@@ -7,7 +7,7 @@ const INITIAL_COUNT = 8;
 
 export default function Products() {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-10%' });
+  const inView = useInView(ref, { once: true, amount: 0.15 });
   const [active, setActive] = useState<(typeof productCategories)[number]>('All');
   const [showAll, setShowAll] = useState(false);
 
@@ -30,27 +30,9 @@ export default function Products() {
     <section
       id="products"
       ref={ref}
-      className="relative py-20 md:py-28 border-t border-forest-900/10 dark:border-honey-500/15 overflow-hidden"
+      className="relative py-20 md:py-28 border-t border-forest-900/10 dark:border-honey-500/15"
     >
-      {/* HPLC background — light */}
-      <img
-        src="/HPLC_light.png"
-        alt=""
-        aria-hidden
-        className="block dark:hidden absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none opacity-30"
-        draggable={false}
-      />
-      {/* HPLC background — dark */}
-      <img
-        src="/HPLC_dark.png"
-        alt=""
-        aria-hidden
-        className="hidden dark:block absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none opacity-25"
-        draggable={false}
-      />
-      {/* Overlay for readability */}
-      <div className="absolute inset-0 bg-cream-50/80 dark:bg-cream-50/80 pointer-events-none" />
-      <div className="relative z-10 container-x">
+      <div className="container-x">
 
         {/* Header */}
         <motion.div
@@ -73,7 +55,7 @@ export default function Products() {
           </p>
         </motion.div>
 
-        {/* Category filter pills */}
+        {/* Category filter pills — spring-animated active background via layoutId */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -84,18 +66,28 @@ export default function Products() {
             <button
               key={c}
               onClick={() => { setActive(c); setShowAll(false); }}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full
+              className={`relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-full
                           text-[11px] font-semibold tracking-[0.18em] uppercase
-                          border transition-all duration-200
+                          border transition-colors duration-200
                           ${active === c
-                            ? 'bg-forest-900 border-forest-900 text-cream-50 dark:bg-honey-600 dark:border-honey-600 dark:text-white'
+                            ? 'border-forest-900 text-cream-50 dark:border-honey-600 dark:text-white'
                             : 'border-forest-900/15 dark:border-honey-500/20 text-forest-900 dark:text-honey-700/80 hover:border-forest-900/30 dark:hover:border-honey-500/40'
                           }`}
             >
-              {c !== 'All' && (
-                <span className={`h-1.5 w-1.5 rounded-full ${catDot[c] ?? 'bg-forest-600'}`} />
+              {/* Spring-animated background for active pill */}
+              {active === c && (
+                <motion.span
+                  layoutId="active-pill"
+                  className="absolute inset-0 rounded-full bg-forest-900 dark:bg-honey-600"
+                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                />
               )}
-              {c}
+              <span className="relative z-10 flex items-center gap-1.5">
+                {c !== 'All' && (
+                  <span className={`h-1.5 w-1.5 rounded-full ${catDot[c] ?? 'bg-forest-600'}`} />
+                )}
+                {c}
+              </span>
             </button>
           ))}
         </motion.div>
@@ -171,15 +163,20 @@ function ProductCard({
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, scale: 0.94, y: 10 }}
+      initial={{ opacity: 0, scale: 0.9, y: 10 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.94, y: 10 }}
-      transition={{ duration: 0.25, delay: index < INITIAL_COUNT ? index * 0.04 : 0 }}
-      whileHover={{ y: -3, transition: { duration: 0.18 } }}
+      exit={{ opacity: 0, scale: 0.9, y: 10 }}
+      transition={{ duration: 0.3, delay: index < INITIAL_COUNT ? index * 0.04 : 0 }}
+      whileHover={{
+        scale: 1.02,
+        y: -3,
+        boxShadow: '0 8px 24px rgba(0,0,0,0.10)',
+        transition: { duration: 0.18 },
+      }}
       className="group relative rounded-xl
                  bg-white/70 dark:bg-white/60
                  border border-forest-900/8 dark:border-honey-500/15
-                 shadow-sm hover:shadow-md
+                 shadow-sm
                  p-4 flex flex-col gap-3
                  transition-shadow duration-300"
     >

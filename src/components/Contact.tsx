@@ -38,9 +38,11 @@ const CONTACT = [
   },
 ];
 
+const HEADLINE_WORDS = ["LET'S", 'FORMULATE.'];
+
 export default function Contact({ onEnquire }: Props) {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-10%' });
+  const inView = useInView(ref, { once: true, amount: 0.15 });
 
   const copy = (val: string, label: string) => {
     navigator.clipboard.writeText(val);
@@ -55,6 +57,8 @@ export default function Contact({ onEnquire }: Props) {
     >
       <div className="container-x">
         <div className="grid lg:grid-cols-2 gap-14">
+
+          {/* Left — headline with per-word bounce */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -63,11 +67,27 @@ export default function Contact({ onEnquire }: Props) {
             <div className="eyebrow text-forest-800 dark:text-honey-300/70 mb-3">
               Contact
             </div>
+
             <h2 className="display-h text-4xl md:text-6xl text-forest-900 dark:text-honey-600">
-              LET'S
-              <br />
-              FORMULATE.
+              {HEADLINE_WORDS.map((word, wi) => (
+                <motion.span
+                  key={word}
+                  className="block"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{
+                    duration: 0.5,
+                    delay: 0.2 + wi * 0.15,
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 18,
+                  }}
+                >
+                  {word}
+                </motion.span>
+              ))}
             </h2>
+
             <p className="mt-6 max-w-md text-forest-900/75 dark:text-honey-700/80">
               Tell us your bird type, current FCR, and the challenge you're
               facing. A nutritionist will reply with a custom plan within 24
@@ -86,20 +106,16 @@ export default function Contact({ onEnquire }: Props) {
             </button>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="space-y-3"
-          >
+          {/* Right — contact cards slide from right with stagger */}
+          <div className="space-y-3">
             {CONTACT.map((c, i) => (
               <motion.div
                 key={c.label}
-                initial={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, x: 40 }}
                 animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
-                whileHover={{ x: 4 }}
-                className="glass rounded-2xl p-5 flex items-center gap-5"
+                transition={{ duration: 0.5, delay: 0.2 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ x: 6 }}
+                className="glass rounded-2xl p-5 flex items-center gap-5 group"
               >
                 <div
                   className="h-12 w-12 shrink-0 rounded-xl flex items-center justify-center
@@ -116,19 +132,22 @@ export default function Contact({ onEnquire }: Props) {
                     {c.value}
                   </div>
                 </div>
-                <button
+                {/* Copy icon spins 180deg on card hover */}
+                <motion.button
                   onClick={() => copy(c.copy, c.label)}
+                  whileHover={{ rotate: 180 }}
+                  transition={{ duration: 0.3 }}
                   className="h-9 w-9 rounded-lg flex items-center justify-center
                              border border-forest-900/15 dark:border-honey-400/20
                              hover:bg-forest-900/5 dark:hover:bg-honey-400/10
-                             text-forest-800 dark:text-honey-300 transition"
+                             text-forest-800 dark:text-honey-300 transition-colors"
                   aria-label={`Copy ${c.label}`}
                 >
                   <Copy size={14} />
-                </button>
+                </motion.button>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

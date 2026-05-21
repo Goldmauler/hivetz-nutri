@@ -27,6 +27,9 @@ const LINKS = {
   ],
 };
 
+/* Approximate path length for the SVG text — used for draw-stroke */
+const STROKE_LEN = 4200;
+
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
   const wordRef   = useRef<HTMLDivElement>(null);
@@ -35,6 +38,9 @@ export default function Footer() {
 
   /* slide-up when footer enters viewport */
   const inView = useInView(footerRef, { once: true, amount: 0.05 });
+
+  /* inView trigger specifically for the wordmark */
+  const wordInView = useInView(wordRef, { once: true, amount: 0.5 });
 
   /* parallax on the wordmark */
   const { scrollYProgress } = useScroll({
@@ -65,16 +71,16 @@ export default function Footer() {
       aria-label="Site footer"
     >
 
-      {/* ── 1. COLUMNS + NEWSLETTER ── in normal flow, no overlap */}
+      {/* ── 1. COLUMNS + NEWSLETTER ── */}
       <div className="container-x pt-16 pb-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 lg:gap-16">
 
           {Object.entries(LINKS).map(([col, items], ci) => (
             <motion.div
               key={col}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 + ci * 0.08 }}
+              transition={{ duration: 0.55, delay: 0.1 * ci }}
             >
               <h4 className="eyebrow text-forest-900/80 dark:text-[#1a3490] mb-5">
                 {col}
@@ -96,11 +102,11 @@ export default function Footer() {
             </motion.div>
           ))}
 
-          {/* Newsletter */}
+          {/* Newsletter — column index 3 */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.55, delay: 0.3 }}
             className="col-span-2 md:col-span-1"
           >
             <h4 className="eyebrow text-forest-900/80 dark:text-[#1a3490] mb-5">
@@ -164,7 +170,7 @@ export default function Footer() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
-        transition={{ duration: 0.5, delay: 0.55 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
         className="container-x py-5
                    flex flex-col sm:flex-row items-start sm:items-center
                    justify-between gap-3
@@ -181,7 +187,7 @@ export default function Footer() {
         </div>
       </motion.div>
 
-      {/* ── 4. WORDMARK — in normal flow, BELOW everything, no overlap ── */}
+      {/* ── 4. WORDMARK with draw-stroke animation ── */}
       <div ref={wordRef} className="overflow-hidden select-none" aria-hidden>
         <motion.div style={{ y: wordY }}>
           <svg
@@ -189,7 +195,7 @@ export default function Footer() {
             className="w-full"
             preserveAspectRatio="xMidYMid meet"
           >
-            <text
+            <motion.text
               x="50%"
               y="110"
               textAnchor="middle"
@@ -201,9 +207,17 @@ export default function Footer() {
               strokeWidth="0.7"
               letterSpacing="-3"
               className="text-forest-900/12 dark:text-[#1a3490]/40"
+              /* draw-stroke: animate from full offset → 0 */
+              initial={{ strokeDasharray: STROKE_LEN, strokeDashoffset: STROKE_LEN, opacity: 0 }}
+              animate={
+                wordInView
+                  ? { strokeDashoffset: 0, opacity: 1 }
+                  : {}
+              }
+              transition={{ duration: 2.2, ease: 'easeInOut', delay: 0.1 }}
             >
               HIVETZ NUTRI
-            </text>
+            </motion.text>
           </svg>
         </motion.div>
       </div>

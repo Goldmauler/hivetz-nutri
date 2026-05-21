@@ -5,7 +5,7 @@ import { testimonials } from '../data/testimonials';
 
 export default function Testimonials() {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-10%' });
+  const inView = useInView(ref, { once: true, amount: 0.15 });
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -52,14 +52,28 @@ export default function Testimonials() {
             strokeWidth={1}
           />
 
+          {/* Slow rotating background arc behind the card */}
+          <motion.div
+            aria-hidden
+            animate={{ rotate: 360 }}
+            transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
+            className="pointer-events-none absolute inset-0 -m-16"
+            style={{ zIndex: 0 }}
+          >
+            <div
+              className="w-full h-full rounded-full border-2 border-dashed
+                          border-forest-900/5 dark:border-honey-400/8"
+            />
+          </motion.div>
+
           <AnimatePresence mode="wait">
             <motion.div
               key={t.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -30 }}
+              initial={{ opacity: 0, y: 24, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -24, scale: 0.97 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="relative"
+              className="relative z-10"
             >
               <p className="font-display text-2xl md:text-4xl leading-snug text-forest-900 dark:text-honey-600">
                 "{t.quote}"
@@ -89,7 +103,7 @@ export default function Testimonials() {
             </motion.div>
           </AnimatePresence>
 
-          <div className="absolute bottom-6 right-6 flex items-center gap-2">
+          <div className="absolute bottom-6 right-6 flex items-center gap-2 z-10">
             <button
               onClick={() =>
                 setI((x) => (x - 1 + testimonials.length) % testimonials.length)

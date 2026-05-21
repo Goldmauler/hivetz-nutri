@@ -34,17 +34,38 @@ const CARDS: Card[] = [
   },
 ];
 
+/* delays match spec: first card 0.2s, second 0.35s */
+const CARD_DELAYS = [0.2, 0.35];
+
 export default function GetStarted() {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-15%' });
+  const inView = useInView(ref, { once: true, amount: 0.15 });
 
   return (
     <section
       id="get-started"
       ref={ref}
-      className="relative py-24 md:py-32 border-t border-forest-900/10 dark:border-honey-400/10"
+      className="relative py-24 md:py-32 border-t border-forest-900/10 dark:border-honey-400/10 overflow-hidden"
     >
-      <div className="container-x max-w-4xl">
+      {/* EGG background — light */}
+      <img
+        src="/EGG_Light.png"
+        alt=""
+        aria-hidden
+        className="block dark:hidden absolute inset-0 w-full h-full object-contain object-center pointer-events-none select-none"
+        draggable={false}
+      />
+      {/* EGG background — dark */}
+      <img
+        src="/EGG_Dark.png"
+        alt=""
+        aria-hidden
+        className="hidden dark:block absolute inset-0 w-full h-full object-contain object-center pointer-events-none select-none"
+        draggable={false}
+      />
+      {/* Minimal edge vignette only — no heavy overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-cream-50/60 via-transparent to-cream-50/60 pointer-events-none" />
+      <div className="relative z-10 container-x max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -68,20 +89,11 @@ export default function GetStarted() {
             <CommandCard
               key={c.step}
               card={c}
-              delay={0.2 + i * 0.15}
+              delay={CARD_DELAYS[i]}
               inView={inView}
             />
           ))}
         </div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.7, delay: 0.7 }}
-          className="text-center mt-10 eyebrow text-forest-900/80 dark:text-honey-200/50"
-        >
-          Trial samples available · MOQ 500 kg
-        </motion.p>
       </div>
     </section>
   );
@@ -111,10 +123,11 @@ function CommandCard({
   };
 
   return (
+    /* slide in from the LEFT */
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, x: -60 }}
+      animate={inView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
       className="relative"
     >
       <div className="flex items-center justify-between mb-2 px-1">
@@ -123,19 +136,27 @@ function CommandCard({
           <span>{card.step}</span>
           <span className="font-semibold">— {card.title}</span>
         </div>
-        <button
+        {/* COPY button with spring scale on click */}
+        <motion.button
           onClick={handleCopy}
+          whileTap={{ scale: 0.82 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 15 }}
           className="eyebrow text-forest-800/80 dark:text-honey-300/80
                      hover:text-forest-900 dark:hover:text-honey-200
                      flex items-center gap-1.5 transition-colors"
         >
           {copied ? <Check size={12} /> : <Copy size={12} />}
           {copied ? 'COPIED' : 'COPY'}
-        </button>
+        </motion.button>
       </div>
 
+      {/* Terminal card with glow pulse on hover */}
       <motion.div
-        whileHover={{ y: -2 }}
+        whileHover={{
+          y: -2,
+          boxShadow: '0 0 0 2px rgba(34,85,34,0.25), 0 8px 32px rgba(34,85,34,0.18)',
+        }}
+        transition={{ duration: 0.25 }}
         className="terminal glass rounded-xl px-5 py-4 flex items-center justify-between gap-4"
       >
         <div className="flex items-center gap-3 min-w-0">

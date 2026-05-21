@@ -42,32 +42,33 @@ export default function Header({ onEnquire }: Props) {
       />
 
       <div className="relative container-x">
-        <div className="flex items-center justify-between h-30 md:h-25">
+        {/* 3-column grid: logo | nav (centered) | actions */}
+        <div className="grid grid-cols-3 items-center h-[90px] md:h-[100px]">
 
-          {/* Logo — large, pinned left */}
-          <a href="#home" className="flex-shrink-0 mr-auto">
-            {/* Light mode logo */}
-            <motion.img
-              src="/HivetzLogoLight.png"
-              alt="Hivetz Nutri"
-              whileHover={{ scale: 1.03 }}
-              transition={{ type: 'spring', stiffness: 400 }}
-              className="block dark:hidden h-40 md:h-21 w-auto select-none"
-              draggable={false}
-            />
-            {/* Dark mode logo */}
-            <motion.img
-              src="/HivetzLogoDark.png"
-              alt="Hivetz Nutri"
-              whileHover={{ scale: 1.03 }}
-              transition={{ type: 'spring', stiffness: 400 }}
-              className="hidden dark:block h-40 md:h-21 w-auto select-none"
-              draggable={false}
-            />
-          </a>
+          {/* ── Col 1: Logo — left ── */}
+          <div className="flex items-center justify-start">
+            <a href="#home" className="flex-shrink-0">
+              <motion.img
+                src="/HivetzLogoLight.png"
+                alt="Hivetz Nutri"
+                whileHover={{ scale: 1.03 }}
+                transition={{ type: 'spring', stiffness: 400 }}
+                className="block dark:hidden h-[76px] md:h-[88px] w-auto select-none"
+                draggable={false}
+              />
+              <motion.img
+                src="/HivetzLogoDark.png"
+                alt="Hivetz Nutri"
+                whileHover={{ scale: 1.03 }}
+                transition={{ type: 'spring', stiffness: 400 }}
+                className="hidden dark:block h-[76px] md:h-[88px] w-auto select-none"
+                draggable={false}
+              />
+            </a>
+          </div>
 
-          {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-1
+          {/* ── Col 2: Nav — perfectly centered ── */}
+          <nav className="hidden lg:flex items-center justify-center gap-1
                           text-[11px] font-semibold tracking-[0.22em] uppercase">
             {NAV.map((n, i) => (
               <motion.a
@@ -76,7 +77,7 @@ export default function Header({ onEnquire }: Props) {
                 initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.08 + i * 0.05 }}
-                className="px-5 py-2 rounded-full transition-colors underline-anim
+                className="px-4 py-2 rounded-full transition-colors underline-anim
                            text-forest-900 hover:bg-forest-900/5
                            dark:text-honey-700 dark:hover:bg-honey-500/10"
               >
@@ -85,41 +86,37 @@ export default function Header({ onEnquire }: Props) {
             ))}
           </nav>
 
-          {/* Right cluster */}
-          <div className="flex items-center gap-3 md:gap-4">
+          {/* ── Col 3: Actions — right ── */}
+          <div className="flex items-center justify-end gap-3">
 
             {/* Social icons */}
             <div className="hidden md:flex items-center gap-3
-                            text-forest-900 dark:text-honey-600/80">
-              <a href="https://www.linkedin.com/company/hivetz/posts/?feedView=all" target="_blank" rel="noreferrer"
-                 aria-label="LinkedIn"
-                 className="hover:text-forest-900 dark:hover:text-honey-700 transition-colors">
-                <Linkedin size={18} />
+                            text-forest-900 dark:text-honey-700">
+              <a href="https://www.linkedin.com/company/hivetz/posts/?feedView=all"
+                 target="_blank" rel="noreferrer" aria-label="LinkedIn"
+                 className="hover:opacity-70 transition-opacity">
+                <Linkedin size={17} />
               </a>
-              <a href="mailto:info@florabiochem.com"
-                 aria-label="Email"
-                 className="hover:text-forest-900 dark:hover:text-honey-700 transition-colors">
-                <Mail size={18} />
+              <a href="mailto:info@florabiochem.com" aria-label="Email"
+                 className="hover:opacity-70 transition-opacity">
+                <Mail size={17} />
               </a>
             </div>
 
             {/* Separator */}
-            <div className="hidden md:block h-5 w-px
-                            bg-forest-900/15 dark:bg-honey-500/20" />
+            <div className="hidden md:block h-5 w-px bg-forest-900/15 dark:bg-honey-500/20" />
 
-            {/* THEME label */}
-            <span className="hidden md:inline eyebrow
-                             text-forest-900 dark:text-honey-700/70">
+            {/* Theme label + toggle */}
+            <span className="hidden md:inline eyebrow text-forest-900 dark:text-honey-700">
               Theme
             </span>
-
             <ThemeToggle />
 
             {/* Enquire pill */}
             <button
               onClick={onEnquire}
               className="hidden md:inline-flex items-center justify-center
-                         px-5 py-2 rounded-full
+                         px-4 py-2 rounded-full
                          text-[11px] font-semibold tracking-[0.18em] uppercase
                          border transition-all duration-300
                          border-forest-900 text-forest-900
@@ -130,7 +127,7 @@ export default function Header({ onEnquire }: Props) {
               Enquire
             </button>
 
-            {/* Hamburger */}
+            {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen(v => !v)}
               aria-label="Toggle menu"
