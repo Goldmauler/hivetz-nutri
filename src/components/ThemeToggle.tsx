@@ -4,6 +4,7 @@ import { useTheme } from '../hooks/useTheme';
 
 export default function ThemeToggle() {
   const { theme, toggle } = useTheme();
+  // Show "dark" state when theme is dark; otherwise show "light" state
   const isDark = theme === 'dark';
 
   return (
@@ -11,7 +12,7 @@ export default function ThemeToggle() {
       onClick={toggle}
       aria-label="Toggle theme"
       className="relative inline-flex h-7 w-14 items-center rounded-full
-                 bg-forest-800 dark:bg-honey-600
+                 bg-forest-800 dark:bg-honey-600 surprise:bg-[#8B4513]
                  transition-colors duration-500
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1
                  focus-visible:ring-forest-600 dark:focus-visible:ring-honey-400"

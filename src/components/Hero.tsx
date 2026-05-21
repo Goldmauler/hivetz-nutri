@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef, useMemo } from 'react';
+import { useRef } from 'react';
+import { useTheme } from '../hooks/useTheme';
 
 /* 20 particles with deterministic-but-varied positions/sizes/durations */
 const PARTICLES = Array.from({ length: 20 }, (_, i) => ({
@@ -20,6 +21,8 @@ const HEADLINE_LINES = [
 
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
+  const { theme } = useTheme();
+  const isSurprise = theme === 'surprise';
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
 
   const yBg     = useTransform(scrollYProgress, [0, 1], ['0%', '22%']);
@@ -39,16 +42,25 @@ export default function Hero() {
         className="absolute inset-0 -z-10"
         aria-hidden
       >
+        {/* Surprise colour background */}
+        <img
+          src="/Hivetz_colour_1.png"
+          alt=""
+          className={`${isSurprise ? 'block' : 'hidden'} absolute inset-0 h-full w-full object-cover object-center select-none`}
+          draggable={false}
+        />
+        {/* Light background */}
         <img
           src="/hivetz_light_background.png"
           alt=""
-          className="block dark:hidden absolute inset-0 h-full w-full object-cover object-center select-none"
+          className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} absolute inset-0 h-full w-full object-cover object-center select-none`}
           draggable={false}
         />
+        {/* Dark background */}
         <img
           src="/hivetz_dark_background.png"
           alt=""
-          className="hidden dark:block absolute inset-0 h-full w-full object-cover object-center select-none"
+          className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} absolute inset-0 h-full w-full object-cover object-center select-none`}
           draggable={false}
         />
       </motion.div>
@@ -65,7 +77,7 @@ export default function Hero() {
               height: p.size,
               opacity: p.opacity,
             }}
-            className="absolute rounded-full bg-forest-800 dark:bg-honey-500"
+            className={`absolute rounded-full ${isSurprise ? 'bg-[#F5A623]' : 'bg-forest-800 dark:bg-honey-500'}`}
             animate={{ y: [0, -(window?.innerHeight ?? 900) - 20] }}
             transition={{
               duration: p.duration,
@@ -78,8 +90,16 @@ export default function Hero() {
       </div>
 
       {/* Vignette */}
-      <div className="absolute inset-0 -z-10 pointer-events-none
-                      bg-gradient-to-b from-cream-50/15 via-transparent to-cream-50" />
+      <div
+        className="absolute inset-0 -z-10 pointer-events-none"
+        style={isSurprise
+          ? { background: 'linear-gradient(to bottom, rgba(252,237,214,0.15) 0%, transparent 40%, rgb(252,237,214) 100%)' }
+          : undefined}
+      >
+        {!isSurprise && (
+          <div className="absolute inset-0 bg-gradient-to-b from-cream-50/15 via-transparent to-cream-50" />
+        )}
+      </div>
 
       {/* Content */}
       <motion.div
@@ -91,16 +111,16 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="eyebrow mb-8 text-forest-800 dark:text-honey-700"
+          className={`eyebrow mb-8 ${isSurprise ? 'text-[#D4845A]' : 'text-forest-800 dark:text-honey-700'}`}
         >
-          Made in India · ISO 9001 · FSSC 22000
+          Made in Sri Lanka
         </motion.p>
 
         {/* Headline — each line staggers in */}
         <h1
-          className="display-h
+          className={`display-h
                      text-[42px] sm:text-[60px] md:text-[84px] lg:text-[106px] xl:text-[122px]
-                     text-forest-900 dark:text-honey-600"
+                     ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-600'}`}
         >
           {HEADLINE_LINES.map((line, i) => (
             <motion.span
@@ -120,11 +140,11 @@ export default function Hero() {
         </h1>
 
         {/* Horizontal rule with shimmer */}
-        <div className="relative mt-6 h-[3px] w-full overflow-hidden rounded-full
-                        bg-forest-900 dark:bg-honey-600">
+        <div className={`relative mt-6 h-[3px] w-full overflow-hidden rounded-full
+                        ${isSurprise ? 'bg-[#D4845A]' : 'bg-forest-900 dark:bg-honey-600'}`}>
           {/* draw-in */}
           <motion.div
-            className="absolute inset-0 origin-left bg-forest-900 dark:bg-honey-600"
+            className={`absolute inset-0 origin-left ${isSurprise ? 'bg-[#D4845A]' : 'bg-forest-900 dark:bg-honey-600'}`}
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 1.1, delay: 1.1 }}
@@ -143,8 +163,8 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.85 }}
-          className="mx-auto mt-8 max-w-2xl text-base md:text-lg leading-relaxed
-                     text-forest-900 dark:text-honey-800"
+          className={`mx-auto mt-8 max-w-2xl text-base md:text-lg leading-relaxed
+                     ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-800'}`}
         >
           Hivetz Nutri Pvt Ltd engineers vitamin premixes, chelated minerals,
           toxin binders and feed additives — manufactured at our 25,000 TPA
@@ -171,9 +191,12 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.2 }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden
-                     border border-forest-900/10 dark:border-honey-500/15
-                     bg-forest-900/5 dark:bg-honey-500/10"
+          className={`mt-16 grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden
+                     border
+                     ${isSurprise
+                       ? 'border-[#D4845A]/20 bg-[#D4845A]/8'
+                       : 'border-forest-900/10 dark:border-honey-500/15 bg-forest-900/5 dark:bg-honey-500/10'
+                     }`}
         >
           {[
             ['25,000', 'TPA capacity'],
@@ -182,12 +205,13 @@ export default function Hero() {
             ['400+',   'Active customers'],
           ].map(([n, l]) => (
             <div key={l}
-                 className="bg-cream-50/90 dark:bg-cream-50/90 backdrop-blur-sm px-6 py-5 text-left">
-              <div className="font-display text-3xl md:text-4xl font-black
-                              text-forest-900 dark:text-honey-600">
+                 className="bg-cream-50/90 dark:bg-cream-50/90 backdrop-blur-sm px-6 py-5 text-left"
+                 style={isSurprise ? { background: 'rgba(252, 237, 214, 0.92)' } : {}}>
+              <div className={`font-display text-3xl md:text-4xl font-black
+                              ${isSurprise ? 'text-[#8B4513]' : 'text-forest-900 dark:text-honey-600'}`}>
                 {n}
               </div>
-              <div className="eyebrow mt-1 text-forest-900 dark:text-honey-700">
+              <div className={`eyebrow mt-1 ${isSurprise ? '!text-[#D4845A]' : 'text-forest-900 dark:text-honey-700'}`}>
                 {l}
               </div>
             </div>

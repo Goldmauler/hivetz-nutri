@@ -1,5 +1,8 @@
+import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useTheme } from './hooks/useTheme';
+import { useState } from 'react';
+
 import Header from './components/Header';
 import Hero from './components/Hero';
 import GetStarted from './components/GetStarted';
@@ -11,11 +14,13 @@ import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import EnquiryModal from './components/EnquiryModal';
-import { useState } from 'react';
 
-export default function App() {
-  const { theme, toggle } = useTheme();
+import AllProductsPage from './pages/AllProductsPage';
+import FoundersPage from './pages/FoundersPage';
+
+function HomePage() {
   const [enquiryOpen, setEnquiryOpen] = useState(false);
+  const { theme } = useTheme();
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -48,8 +53,17 @@ export default function App() {
       </main>
 
       <Footer />
-
       <EnquiryModal open={enquiryOpen} onClose={() => setEnquiryOpen(false)} />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/"           element={<HomePage />} />
+      <Route path="/products"   element={<AllProductsPage />} />
+      <Route path="/founders"   element={<FoundersPage />} />
+    </Routes>
   );
 }

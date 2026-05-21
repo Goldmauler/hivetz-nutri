@@ -1,6 +1,7 @@
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { products, productCategories, type Product } from '../data/products';
 
 const INITIAL_COUNT = 8;
@@ -9,13 +10,12 @@ export default function Products() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.15 });
   const [active, setActive] = useState<(typeof productCategories)[number]>('All');
-  const [showAll, setShowAll] = useState(false);
 
   const filtered = active === 'All'
     ? products
     : products.filter(p => p.category === active);
 
-  const visible = showAll ? filtered : filtered.slice(0, INITIAL_COUNT);
+  const visible = filtered.slice(0, INITIAL_COUNT);
   const hasMore = filtered.length > INITIAL_COUNT;
 
   const catDot: Record<string, string> = {
@@ -65,7 +65,7 @@ export default function Products() {
           {productCategories.map(c => (
             <button
               key={c}
-              onClick={() => { setActive(c); setShowAll(false); }}
+              onClick={() => { setActive(c); }}
               className={`relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-full
                           text-[11px] font-semibold tracking-[0.18em] uppercase
                           border transition-colors duration-200
@@ -109,41 +109,29 @@ export default function Products() {
           </AnimatePresence>
         </motion.div>
 
-        {/* View more / collapse */}
-        {hasMore && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.3 }}
-            className="mt-8 flex flex-col items-center gap-2"
+        {/* View more — navigates to full /products page */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.3 }}
+          className="mt-8 flex flex-col items-center gap-2"
+        >
+          <Link
+            to="/products"
+            className="group flex items-center gap-2 px-7 py-3 rounded-full
+                       bg-forest-900 dark:bg-honey-600 text-cream-50 dark:text-white
+                       text-sm font-semibold
+                       hover:bg-forest-800 dark:hover:bg-honey-500
+                       transition-all duration-300 hover:-translate-y-0.5
+                       hover:shadow-[0_10px_30px_-10px_rgba(20,83,45,0.45)]"
           >
-            <button
-              onClick={() => setShowAll(v => !v)}
-              className="group flex items-center gap-2 px-7 py-3 rounded-full
-                         border border-forest-900/20 dark:border-honey-500/25
-                         text-sm font-semibold text-forest-900 dark:text-honey-600
-                         hover:bg-forest-900/5 dark:hover:bg-honey-500/10
-                         transition-all duration-300"
-            >
-              {showAll ? (
-                <>
-                  <ChevronUp size={15} className="group-hover:-translate-y-0.5 transition-transform" />
-                  Show Less
-                </>
-              ) : (
-                <>
-                  View All {filtered.length} Products
-                  <ChevronDown size={15} className="group-hover:translate-y-0.5 transition-transform" />
-                </>
-              )}
-            </button>
-            {!showAll && (
-              <p className="eyebrow text-forest-900/35 dark:text-honey-700/45">
-                showing {INITIAL_COUNT} of {filtered.length}
-              </p>
-            )}
-          </motion.div>
-        )}
+            View All {products.length} Products
+            <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+          </Link>
+          <p className="eyebrow text-forest-900/35 dark:text-honey-700/45">
+            showing {visible.length} of {products.length}
+          </p>
+        </motion.div>
       </div>
     </section>
   );

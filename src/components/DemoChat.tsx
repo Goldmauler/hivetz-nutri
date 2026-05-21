@@ -2,10 +2,13 @@ import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { chatScripts, type ChatStep } from '../data/demoChat';
+import { useTheme } from '../hooks/useTheme';
 
 export default function DemoChat() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.15 });
+  const { theme } = useTheme();
+  const isSurprise = theme === 'surprise';
 
   const [activeId, setActiveId] = useState(chatScripts[0].id);
   const [played, setPlayed] = useState<ChatStep[]>([]);
@@ -34,68 +37,98 @@ export default function DemoChat() {
     };
 
     if (inView) run();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [activeId, inView]);
+
+  const textPrimary   = isSurprise ? 'text-[#5C2D0A]'      : 'text-forest-900 dark:text-honey-600';
+  const textSecondary = isSurprise ? 'text-[#5C2D0A]/75'   : 'text-forest-900 dark:text-honey-700/75';
+  const eyebrowColor  = isSurprise ? 'text-[#D4845A]'       : 'text-forest-800 dark:text-honey-300/70';
+  const borderColor   = isSurprise ? 'border-[#8B4513]/15'  : 'border-forest-900/10 dark:border-honey-400/15';
+  const glassStyle    = isSurprise ? {
+    background: 'rgba(252,237,214,0.7)',
+    border: '1px solid rgba(139,69,19,0.15)',
+  } : {};
 
   return (
     <section
       ref={ref}
-      className="relative py-24 md:py-32 border-t border-forest-900/10 dark:border-honey-400/10"
+      className={`relative py-20 md:py-28 border-t ${borderColor} overflow-hidden`}
     >
       <div className="container-x">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
-          className="flex items-end justify-between gap-6 mb-10 flex-wrap"
+          className="mb-10"
         >
-          <div>
-            <div className="eyebrow text-forest-800 dark:text-honey-300/70 mb-3">
-              See it in action
-            </div>
-            <h2 className="display-h text-4xl md:text-6xl text-forest-900 dark:text-honey-600">
+          <div className={`eyebrow ${eyebrowColor} mb-3`}>
+            See it in action
+          </div>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <h2 className={`display-h text-4xl md:text-6xl ${textPrimary}`}>
               ASK HIVETZ
               <br />
               ANYTHING.
             </h2>
+            <p className={`max-w-md text-sm leading-relaxed ${textSecondary}`}>
+              A working demo of the kind of advice our nutritionists give every
+              day. Pick a question and watch a recommendation get drafted in real time.
+            </p>
           </div>
-          <p className="max-w-md text-forest-900 dark:text-honey-700/75">
-            A working demo of the kind of advice our nutritionists give every
-            day. Pick a question and watch a recommendation get drafted in real
-            time.
-          </p>
         </motion.div>
 
-        {/* Chat window with subtle breathing scale */}
+        {/* Chat window */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
+          className="w-full overflow-hidden"
         >
-          <motion.div
-            animate={{ scale: [1, 1.002, 1] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="glass rounded-3xl overflow-hidden"
+          <div
+            className="glass rounded-2xl overflow-hidden w-full"
+            style={glassStyle}
           >
             {/* Window chrome */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-forest-900/10 dark:border-honey-400/15">
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-red-400/80" />
-                <span className="h-3 w-3 rounded-full bg-amber-400/80" />
-                <span className="h-3 w-3 rounded-full bg-emerald-500/80" />
+            <div className={`flex items-center justify-between px-4 py-3 border-b ${borderColor}`}>
+              <div className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/80" />
               </div>
-              <div className="eyebrow text-forest-900 dark:text-honey-200/70 flex items-center gap-2">
-                <Sparkles size={12} /> hivetz-advisor
+              <div className={`eyebrow ${isSurprise ? 'text-[#8B4513]' : 'text-forest-900 dark:text-honey-200/70'} flex items-center gap-1.5`}>
+                <Sparkles size={11} /> hivetz-advisor
               </div>
-              <div className="w-12" />
+              <div className="w-10" />
             </div>
 
-            <div className="grid lg:grid-cols-[280px_1fr]">
-              {/* Sample questions sidebar */}
-              <div className="border-b lg:border-b-0 lg:border-r border-forest-900/10 dark:border-honey-400/15 p-4 space-y-2">
-                <div className="eyebrow text-forest-900 dark:text-honey-200/70 px-2 mb-2">
+            {/* Questions — horizontal scroll pills on mobile, sidebar on desktop */}
+            <div className={`border-b lg:border-b-0 ${borderColor} lg:hidden`}>
+              <div className="flex gap-2 overflow-x-auto px-4 py-3 scrollbar-none">
+                {chatScripts.map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => setActiveId(s.id)}
+                    className={`flex-shrink-0 text-xs px-3 py-1.5 rounded-full border transition whitespace-nowrap
+                      ${s.id === activeId
+                        ? isSurprise
+                          ? 'bg-[#8B4513] text-[rgb(252,237,214)] border-[#8B4513]'
+                          : 'bg-forest-900 text-cream-50 border-forest-900 dark:bg-honey-500 dark:border-honey-500 dark:text-white'
+                        : isSurprise
+                          ? 'border-[#8B4513]/20 text-[#5C2D0A]'
+                          : 'border-forest-900/15 dark:border-honey-400/20 text-forest-900 dark:text-honey-700/75'
+                      }`}
+                  >
+                    {s.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="lg:grid lg:grid-cols-[260px_1fr]">
+              {/* Sidebar — desktop only */}
+              <div className={`hidden lg:block border-r ${borderColor} p-4 space-y-1`}>
+                <div className={`eyebrow ${isSurprise ? 'text-[#D4845A]' : 'text-forest-900 dark:text-honey-200/70'} px-2 mb-3`}>
                   Sample Questions
                 </div>
                 {chatScripts.map((s) => (
@@ -103,9 +136,12 @@ export default function DemoChat() {
                     key={s.id}
                     onClick={() => setActiveId(s.id)}
                     className={`w-full text-left text-sm px-3 py-2.5 rounded-lg transition
-                      ${
-                        s.id === activeId
-                          ? 'bg-forest-900/8 dark:bg-honey-400/15 text-forest-900 dark:text-honey-200'
+                      ${s.id === activeId
+                        ? isSurprise
+                          ? 'bg-[#8B4513]/12 text-[#5C2D0A]'
+                          : 'bg-forest-900/8 dark:bg-honey-400/15 text-forest-900 dark:text-honey-200'
+                        : isSurprise
+                          ? 'hover:bg-[#8B4513]/6 text-[#5C2D0A]/80'
                           : 'hover:bg-forest-900/5 dark:hover:bg-honey-400/8 text-forest-900 dark:text-honey-700/75'
                       }`}
                   >
@@ -115,37 +151,34 @@ export default function DemoChat() {
               </div>
 
               {/* Chat body */}
-              <div className="p-5 md:p-7 min-h-[420px] flex flex-col">
-                <div className="flex-1 space-y-4 font-mono text-[13.5px] md:text-sm">
+              <div className="p-4 md:p-6 min-h-[360px] flex flex-col overflow-hidden">
+                <div className="flex-1 space-y-4 font-mono text-[12px] md:text-[13.5px] overflow-hidden">
                   <AnimatePresence>
                     {played.map((step, i) => (
                       <motion.div
                         key={`${activeId}-${i}`}
-                        initial={
-                          step.role === 'user'
-                            ? { opacity: 0, x: -24 }
-                            : { opacity: 0, x: 24 }
-                        }
+                        initial={step.role === 'user' ? { opacity: 0, x: -16 } : { opacity: 0, x: 16 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
                       >
                         {step.role === 'user' ? (
-                          <div className="flex gap-3">
-                            <span className="text-forest-700 dark:text-honey-400 select-none">
+                          <div className="flex gap-2 overflow-hidden">
+                            <span className={`flex-shrink-0 ${isSurprise ? 'text-[#D4845A]' : 'text-forest-700 dark:text-honey-400'}`}>
                               ▸
                             </span>
-                            <span className="text-forest-900 dark:text-honey-600">
+                            <span className={`break-words min-w-0 ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-600'}`}>
                               {step.content}
                             </span>
                           </div>
                         ) : (
-                          <div className="pl-6 space-y-1.5">
+                          <div className="pl-4 space-y-1 overflow-hidden">
                             {step.meta && (
-                              <div className="eyebrow text-forest-700/80 dark:text-honey-400/80 tracking-[0.15em]">
+                              <div className={`eyebrow tracking-[0.15em] ${isSurprise ? 'text-[#D4845A]/80' : 'text-forest-700/80 dark:text-honey-400/80'}`}>
                                 › {step.meta}
                               </div>
                             )}
-                            <TypedLine text={step.content} />
+                            <TypedLine text={step.content} isSurprise={isSurprise} />
                           </div>
                         )}
                       </motion.div>
@@ -156,7 +189,7 @@ export default function DemoChat() {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="pl-6 flex items-center gap-1 text-forest-900/80 dark:text-honey-700/60"
+                      className={`pl-4 flex items-center gap-1 ${isSurprise ? 'text-[#8B4513]/60' : 'text-forest-900/80 dark:text-honey-700/60'}`}
                     >
                       <WaveDot delay={0} />
                       <WaveDot delay={0.15} />
@@ -166,34 +199,33 @@ export default function DemoChat() {
                 </div>
 
                 {/* Fake input */}
-                <div className="mt-6 flex items-center gap-3 px-4 py-3 rounded-xl border border-forest-900/15 dark:border-honey-400/20">
-                  <span className="text-forest-700 dark:text-honey-400">▸</span>
-                  <span className="font-mono text-sm text-forest-900/75 dark:text-honey-700/50 flex-1 truncate">
+                <div className={`mt-5 flex items-center gap-2 px-3 py-2.5 rounded-xl border ${borderColor}`}>
+                  <span className={`flex-shrink-0 ${isSurprise ? 'text-[#D4845A]' : 'text-forest-700 dark:text-honey-400'}`}>▸</span>
+                  <span className={`font-mono text-xs flex-1 truncate ${isSurprise ? 'text-[#5C2D0A]/60' : 'text-forest-900/75 dark:text-honey-700/50'}`}>
                     Type a question about premixes, FCR, mycotoxins…
                   </span>
                   <button
-                    className="h-8 w-8 rounded-lg bg-forest-800 text-cream-50 dark:bg-honey-400 dark:text-ink-300
-                               flex items-center justify-center hover:scale-105 transition"
+                    className={`flex-shrink-0 h-7 w-7 rounded-lg flex items-center justify-center hover:scale-105 transition
+                      ${isSurprise ? 'bg-[#8B4513] text-[rgb(252,237,214)]' : 'bg-forest-800 text-cream-50 dark:bg-honey-400 dark:text-ink-300'}`}
                     onClick={() => {
                       const idx = chatScripts.findIndex((s) => s.id === activeId);
-                      const next = chatScripts[(idx + 1) % chatScripts.length];
-                      setActiveId(next.id);
+                      setActiveId(chatScripts[(idx + 1) % chatScripts.length].id);
                     }}
                     aria-label="Next demo"
                   >
-                    <ArrowRight size={16} />
+                    <ArrowRight size={14} />
                   </button>
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
     </section>
   );
 }
 
-function TypedLine({ text }: { text: string }) {
+function TypedLine({ text, isSurprise }: { text: string; isSurprise: boolean }) {
   const [out, setOut] = useState('');
   useEffect(() => {
     setOut('');
@@ -206,20 +238,20 @@ function TypedLine({ text }: { text: string }) {
     return () => window.clearInterval(id);
   }, [text]);
   return (
-    <span className="block text-forest-900/85 dark:text-honey-600/90 leading-relaxed">
+    <span className={`block leading-relaxed break-words ${isSurprise ? 'text-[#5C2D0A]/85' : 'text-forest-900/85 dark:text-honey-600/90'}`}>
       {out}
       {out.length < text.length && (
-        <span className="ml-0.5 inline-block w-2 h-4 bg-forest-700 dark:bg-honey-400 animate-blink align-middle" />
+        <span className={`ml-0.5 inline-block w-1.5 h-3.5 animate-blink align-middle
+          ${isSurprise ? 'bg-[#D4845A]' : 'bg-forest-700 dark:bg-honey-400'}`} />
       )}
     </span>
   );
 }
 
-/* Wave-bouncing dot for the typing indicator */
 function WaveDot({ delay }: { delay: number }) {
   return (
     <motion.span
-      animate={{ y: [0, -5, 0] }}
+      animate={{ y: [0, -4, 0] }}
       transition={{ duration: 0.6, repeat: Infinity, delay, ease: 'easeInOut' }}
       className="h-1.5 w-1.5 rounded-full bg-current"
     />

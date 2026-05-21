@@ -6,6 +6,7 @@
    BASE
    Light: cream bg  (#FDFBF5) + forest-green accents
    Dark:  SAME cream bg (#FDFBF5) + blue accents  (dark PNG only in hero)
+   Surprise: warm amber/terracotta palette
 ───────────────────────────────────────────────────────────────────────── */
 @layer base {
   html {
@@ -24,14 +25,22 @@
     @apply bg-cream-50 text-honey-800;
   }
 
-  ::selection       { @apply bg-forest-700 text-cream-50; }
-  .dark ::selection { @apply bg-honey-500 text-white; }
+  /* SURPRISE — warm peach/beige bg + terracotta/amber accents */
+  body.surprise {
+    background-color: rgb(252, 237, 214);
+    color: #5C2D0A;
+    transition: background-color 0.5s, color 0.5s;
+  }
+
+  ::selection         { @apply bg-forest-700 text-cream-50; }
+  .dark ::selection   { @apply bg-honey-500 text-white; }
+  .surprise ::selection { background: #F5A623; color: #fff; }
 
   /* scrollbar */
   ::-webkit-scrollbar            { width: 8px; height: 8px; }
   ::-webkit-scrollbar-track      { @apply bg-cream-100; }
   ::-webkit-scrollbar-thumb      { @apply bg-forest-700 rounded-full; }
-  .dark ::-webkit-scrollbar-thumb { @apply bg-honey-500 rounded-full; }
+  .dark ::-webkit-scrollbar-thumb    { @apply bg-honey-500 rounded-full; }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -146,8 +155,182 @@
   /* ── divider ──────────────────────────────────────────────────────── */
   .divider { @apply h-px w-full bg-forest-900/10; }
   .dark .divider { @apply bg-honey-500/15; }
+  .surprise .divider { background: rgba(139,69,19,0.15); }
 }
+
+/* ──────────────────────────────────────────────────────────────────────────
+   SURPRISE THEME OVERRIDES
+   Warm amber/terracotta palette drawn from Hivetz_Logo.png colours:
+   - Deep terracotta: #8B4513
+   - Amber/honey:     #F5A623
+   - Warm coral:      #D4845A
+   - Cream bg:        #FDF6E3
+   - Dark brown text: #5C2D0A
+────────────────────────────────────────────────────────────────────────── */
+
+/* Glass cards */
+.surprise .glass {
+  backdrop-filter: blur(20px);
+  background: rgba(252, 237, 214, 0.7) !important;
+  border: 1px solid rgba(139, 69, 19, 0.15) !important;
+  box-shadow: 0 8px 40px -12px rgba(139, 69, 19, 0.22);
+}
+
+/* Terminal blocks */
+.surprise .terminal {
+  border: 1px solid rgba(139, 69, 19, 0.18);
+  color: #5C2D0A;
+  background: linear-gradient(180deg, rgba(245,166,35,0.06) 0%, rgba(212,132,90,0.10) 100%);
+}
+.surprise .terminal-highlight {
+  background: linear-gradient(90deg, rgba(245,166,35,0.22) 0%, rgba(245,166,35,0.08) 100%);
+}
+
+/* Grid overlay */
+.surprise .grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(139,69,19,0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(139,69,19,0.07) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+/* Buttons */
+.surprise .btn-primary {
+  background: #8B4513;
+  color: #FDF6E3;
+}
+.surprise .btn-primary:hover {
+  background: #5C2D0A;
+  box-shadow: 0 10px 30px -10px rgba(139,69,19,0.55);
+  transform: translateY(-2px);
+}
+.surprise .btn-ghost {
+  border-color: rgba(139,69,19,0.25);
+  color: #5C2D0A;
+}
+.surprise .btn-ghost:hover {
+  background: rgba(139,69,19,0.06);
+}
+
+/* Section borders */
+.surprise section {
+  border-color: rgba(139,69,19,0.12) !important;
+}
+
+/* Eyebrow text */
+.surprise .eyebrow {
+  color: #D4845A;
+}
+
+/* Theme transition for the whole page */
+.surprise * {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+/* Footer surprise overrides */
+.surprise footer {
+  background-color: rgb(252, 237, 214) !important;
+  border-top-color: rgba(139,69,19,0.20) !important;
+}
+.surprise footer h4,
+.surprise footer a,
+.surprise footer p,
+.surprise footer span {
+  color: #5C2D0A;
+}
+.surprise footer a:hover {
+  color: #8B4513;
+}
+.surprise footer .eyebrow {
+  color: #D4845A !important;
+}
+.surprise footer input {
+  border-color: rgba(139,69,19,0.20);
+  color: #5C2D0A;
+}
+.surprise footer button[type="submit"] {
+  background: #8B4513 !important;
+  color: #FDF6E3 !important;
+}
+.surprise footer svg text {
+  color: rgba(139,69,19,0.12) !important;
+}
+
+/* DemoChat surprise overrides */
+.surprise .demo-chat-section .eyebrow {
+  color: #D4845A !important;
+}
+.surprise .demo-chat-section h2 {
+  color: #5C2D0A;
+}
+.surprise .demo-chat-section p {
+  color: #5C2D0A;
+}
+.surprise .demo-chat-section .glass {
+  background: rgba(255,244,220,0.65) !important;
+  border-color: rgba(139,69,19,0.18) !important;
+}
+
+/* Products section surprise overrides */
+.surprise #products .eyebrow { color: #D4845A !important; }
+.surprise #products h2 { color: #5C2D0A; }
+.surprise #products p { color: #5C2D0A; }
+.surprise #products .product-card {
+  background: rgba(253,246,227,0.80) !important;
+  border-color: rgba(139,69,19,0.10) !important;
+}
+
+/* ── Catch-all: convert remaining forest-green text to surprise brown ── */
+/* These target Tailwind utility classes that components still use */
+.surprise .text-forest-900,
+.surprise .text-forest-800,
+.surprise .text-forest-700 {
+  color: #5C2D0A !important;
+}
+.surprise .text-forest-900\/80,
+.surprise .text-forest-900\/75 {
+  color: rgba(92,45,10,0.80) !important;
+}
+.surprise .border-forest-900,
+.surprise .border-forest-900\/10,
+.surprise .border-forest-900\/15 {
+  border-color: rgba(139,69,19,0.18) !important;
+}
+.surprise .bg-forest-900 {
+  background-color: #8B4513 !important;
+}
+.surprise .bg-forest-800 {
+  background-color: #8B4513 !important;
+}
+.surprise .hover\:bg-forest-900:hover,
+.surprise .hover\:bg-forest-800:hover {
+  background-color: #5C2D0A !important;
+}
+/* Products cards white bg → beige */
+.surprise .bg-white\/70,
+.surprise .bg-white\/60 {
+  background-color: rgba(252, 237, 214, 0.75) !important;
+}
+
+/* Testimonials + Contact surprise overrides */
+.surprise #contact .eyebrow,
+.surprise .testimonials-section .eyebrow { color: #D4845A !important; }
+.surprise #contact h2,
+.surprise .testimonials-section h2 { color: #5C2D0A; }
 
 /* blinking cursor */
 .caret::after     { content: '▍'; margin-left: 2px; animation: blink 1s step-end infinite; }
 .caret-off::after { content: ''; }
+
+/* Hide scrollbar for mobile chat pills */
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Scrollbar — surprise mode (must be outside @layer to work with parent selector) */
+html.surprise ::-webkit-scrollbar-thumb {
+  background: #D4845A;
+  border-radius: 9999px;
+}
+html.surprise ::-webkit-scrollbar-track {
+  background: rgb(252, 237, 214);
+}

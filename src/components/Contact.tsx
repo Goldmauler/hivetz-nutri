@@ -88,7 +88,7 @@ export default function Contact({ onEnquire }: Props) {
               ))}
             </h2>
 
-            <p className="mt-6 max-w-md text-forest-900/75 dark:text-honey-700/80">
+            <p className="mt-6 max-w-md text-forest-900/75 dark:text-honey-700/80 break-words">
               Tell us your bird type, current FCR, and the challenge you're
               facing. A nutritionist will reply with a custom plan within 24
               hours.
@@ -111,39 +111,39 @@ export default function Contact({ onEnquire }: Props) {
             {CONTACT.map((c, i) => (
               <motion.div
                 key={c.label}
-                initial={{ opacity: 0, x: 40 }}
+                initial={{ opacity: 0, x: 20 }}
                 animate={inView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.5, delay: 0.2 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ x: 6 }}
-                className="glass rounded-2xl p-5 flex items-center gap-5 group"
+                whileHover={{ x: 4 }}
+                className="glass rounded-2xl p-4 md:p-5 flex items-start gap-4 group"
               >
                 <div
-                  className="h-12 w-12 shrink-0 rounded-xl flex items-center justify-center
+                  className="h-10 w-10 md:h-12 md:w-12 shrink-0 rounded-xl flex items-center justify-center
                              bg-forest-900/8 dark:bg-honey-400/15
                              text-forest-800 dark:text-honey-300"
                 >
-                  <c.icon size={20} />
+                  <c.icon size={18} />
                 </div>
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 overflow-hidden">
                   <div className="eyebrow text-forest-900 dark:text-honey-200/70 mb-0.5">
                     {c.label}
                   </div>
-                  <div className="font-medium text-forest-900 dark:text-honey-600 truncate">
+                  <div className="font-medium text-forest-900 dark:text-honey-600 break-words text-sm md:text-base">
                     {c.value}
                   </div>
                 </div>
-                {/* Copy icon spins 180deg on card hover */}
+                {/* Copy icon */}
                 <motion.button
                   onClick={() => copy(c.copy, c.label)}
                   whileHover={{ rotate: 180 }}
                   transition={{ duration: 0.3 }}
-                  className="h-9 w-9 rounded-lg flex items-center justify-center
+                  className="shrink-0 h-8 w-8 md:h-9 md:w-9 rounded-lg flex items-center justify-center
                              border border-forest-900/15 dark:border-honey-400/20
                              hover:bg-forest-900/5 dark:hover:bg-honey-400/10
                              text-forest-800 dark:text-honey-300 transition-colors"
                   aria-label={`Copy ${c.label}`}
                 >
-                  <Copy size={14} />
+                  <Copy size={13} />
                 </motion.button>
               </motion.div>
             ))}

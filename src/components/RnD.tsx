@@ -1,6 +1,7 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { FlaskConical, Microscope, BarChart3, ShieldCheck } from 'lucide-react';
+import { useTheme } from '../hooks/useTheme';
 
 const PILLARS = [
   {
@@ -28,6 +29,8 @@ const PILLARS = [
 export default function RnD() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.15 });
+  const { theme } = useTheme();
+  const isSurprise = theme === 'surprise';
 
   const barRef = useRef<HTMLDivElement>(null);
   const barInView = useInView(barRef, { once: true, amount: 0.15 });
@@ -38,12 +41,20 @@ export default function RnD() {
       ref={ref}
       className="relative py-24 md:py-32 border-t border-forest-900/10 dark:border-honey-400/10 overflow-hidden"
     >
+      {/* Surprise colour background — Hivetz_Colour_3.png */}
+      <img
+        src="/Hivetz_Colour_3.png"
+        alt=""
+        aria-hidden
+        className={`${isSurprise ? 'block' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none opacity-90`}
+        draggable={false}
+      />
       {/* Bag_Green — light mode bg */}
       <img
         src="/Bag_Green.png"
         alt=""
         aria-hidden
-        className="block dark:hidden absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none opacity-90"
+        className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none opacity-90`}
         draggable={false}
       />
       {/* Bag_Blue — dark mode bg */}
@@ -51,11 +62,12 @@ export default function RnD() {
         src="/Bag_Blue.png"
         alt=""
         aria-hidden
-        className="hidden dark:block absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none opacity-90"
+        className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none opacity-90`}
         draggable={false}
       />
       {/* Cream overlay */}
-      <div className="absolute inset-0 bg-cream-50/80 dark:bg-cream-50/75 pointer-events-none" />
+      <div className={`absolute inset-0 pointer-events-none
+        ${isSurprise ? 'bg-[rgba(252,237,214,0.75)]' : 'bg-cream-50/80 dark:bg-cream-50/75'}`} />
       {/* Decorative background blobs */}
       <div className="pointer-events-none absolute -top-32 -left-32 w-96 h-96 rounded-full bg-forest-700/10 dark:bg-honey-400/10 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 -right-32 w-[28rem] h-[28rem] rounded-full bg-honey-400/10 dark:bg-forest-500/10 blur-3xl" />
@@ -67,15 +79,15 @@ export default function RnD() {
           transition={{ duration: 0.7 }}
           className="max-w-2xl mb-14"
         >
-          <div className="eyebrow text-forest-800 dark:text-honey-300/70 mb-3">
-            R&D Centre · Karnataka
+          <div className={`eyebrow mb-3 ${isSurprise ? '!text-[#D4845A]' : 'text-forest-800 dark:text-honey-300/70'}`}>
+            R&D Centre · Sri Lanka
           </div>
-          <h2 className="display-h text-4xl md:text-6xl text-forest-900 dark:text-honey-600">
+          <h2 className={`display-h text-4xl md:text-6xl ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-600'}`}>
             THE SCIENCE
             <br />
             BEHIND THE BAG.
           </h2>
-          <p className="mt-6 text-forest-900/75 dark:text-honey-700/80">
+          <p className={`mt-6 ${isSurprise ? 'text-[#5C2D0A]/75' : 'text-forest-900/75 dark:text-honey-700/80'}`}>
             A 4,000 sq.ft. dedicated R&D centre with HPLC, AAS, ELISA and live
             trial sheds. Every formulation we ship has been validated three
             ways: bench, batch, and bird.
@@ -90,22 +102,30 @@ export default function RnD() {
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.55, delay: 0.1 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="glass rounded-2xl p-6 group"
+              className={`glass rounded-2xl p-6 group
+                ${isSurprise ? '' : ''}`}
+              style={isSurprise ? {
+                background: 'rgba(255,244,220,0.65)',
+                border: '1px solid rgba(139,69,19,0.15)',
+                backdropFilter: 'blur(20px)',
+              } : {}}
             >
               {/* Icon rotates 10deg + scales on hover */}
               <motion.div
                 whileHover={{ rotate: 10, scale: 1.1 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 18 }}
-                className="h-11 w-11 rounded-xl flex items-center justify-center
-                            bg-forest-900/8 dark:bg-honey-400/15
-                            text-forest-800 dark:text-honey-300"
+                className={`h-11 w-11 rounded-xl flex items-center justify-center
+                            ${isSurprise
+                              ? 'bg-[#F5A623]/15 text-[#8B4513]'
+                              : 'bg-forest-900/8 dark:bg-honey-400/15 text-forest-800 dark:text-honey-300'
+                            }`}
               >
                 <p.icon size={20} />
               </motion.div>
-              <h3 className="mt-5 font-display text-xl font-bold text-forest-900 dark:text-honey-600">
+              <h3 className={`mt-5 font-display text-xl font-bold ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-600'}`}>
                 {p.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-forest-900 dark:text-honey-700/75">
+              <p className={`mt-2 text-sm leading-relaxed ${isSurprise ? 'text-[#5C2D0A]/75' : 'text-forest-900 dark:text-honey-700/75'}`}>
                 {p.body}
               </p>
             </motion.div>
@@ -118,9 +138,12 @@ export default function RnD() {
             initial={{ opacity: 0, x: 80 }}
             animate={barInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-12 rounded-2xl overflow-hidden
-                       bg-forest-900 text-cream-50 dark:bg-honey-400 dark:text-ink-300
-                       p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+            className={`mt-12 rounded-2xl overflow-hidden p-8 md:p-12
+                       flex flex-col md:flex-row items-start md:items-center justify-between gap-6
+                       ${isSurprise
+                         ? 'bg-[#8B4513] text-[#FDF6E3]'
+                         : 'bg-forest-900 text-cream-50 dark:bg-honey-400 dark:text-ink-300'
+                       }`}
           >
             <div>
               <div className="eyebrow opacity-70 mb-2">Average turnaround</div>

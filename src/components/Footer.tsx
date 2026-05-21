@@ -147,7 +147,7 @@ export default function Footer() {
             <div className="mt-6 flex items-center gap-3
                             text-forest-900/80 dark:text-[#1a3490]">
               {[
-                { Icon: Linkedin, label: 'LinkedIn', href: '#' },
+                { Icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/company/hivetz/posts/?feedView=all' },
                 { Icon: Twitter,  label: 'Twitter',  href: '#' },
                 { Icon: Github,   label: 'GitHub',   href: '#' },
                 { Icon: Mail,     label: 'Email',    href: 'mailto:info@florabiochem.com' },
