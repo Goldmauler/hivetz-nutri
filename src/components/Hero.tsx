@@ -1,6 +1,14 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { useTheme } from '../hooks/useTheme';
+import { useInView } from 'framer-motion';
+
+const STATS: Array<{ raw: number; display: string; label: string }> = [
+  { raw: 25000, display: '25,000', label: 'TPA capacity' },
+  { raw: 50000, display: '50,000', label: 'TPA scaling' },
+  { raw: 12,    display: '12',     label: 'Product families' },
+  { raw: 400,   display: '400',    label: 'Active customers' },
+];
 
 /* 20 particles with deterministic-but-varied positions/sizes/durations */
 const PARTICLES = Array.from({ length: 20 }, (_, i) => ({
@@ -198,26 +206,36 @@ export default function Hero() {
                        : 'border-forest-900/10 dark:border-honey-500/15 bg-forest-900/5 dark:bg-honey-500/10'
                      }`}
         >
-          {[
-            ['25,000', 'TPA capacity'],
-            ['50,000', 'TPA scaling'],
-            ['12+',    'Product families'],
-            ['400+',   'Active customers'],
-          ].map(([n, l]) => (
-            <div key={l}
-                 className="bg-cream-50/90 dark:bg-cream-50/90 backdrop-blur-sm px-6 py-5 text-left"
-                 style={isSurprise ? { background: 'rgba(252, 237, 214, 0.92)' } : {}}>
-              <div className={`font-display text-3xl md:text-4xl font-black
-                              ${isSurprise ? 'text-[#8B4513]' : 'text-forest-900 dark:text-honey-600'}`}>
-                {n}
-              </div>
-              <div className={`eyebrow mt-1 ${isSurprise ? '!text-[#D4845A]' : 'text-forest-900 dark:text-honey-700'}`}>
-                {l}
-              </div>
-            </div>
+          {STATS.map((s) => (
+            <HeroStatCell key={s.label} stat={s} isSurprise={isSurprise} />
           ))}
         </motion.div>
       </motion.div>
     </section>
+  );
+}
+
+function HeroStatCell({
+  stat,
+  isSurprise,
+}: {
+  stat: { raw: number; display: string; label: string };
+  isSurprise: boolean;
+}) {
+  const suffix = stat.label.includes('families') || stat.label.includes('customers') ? '+' : '';
+
+  return (
+    <div
+      className="bg-cream-50/90 dark:bg-cream-50/90 backdrop-blur-sm px-6 py-5 text-left"
+      style={isSurprise ? { background: 'rgba(252, 237, 214, 0.92)' } : {}}
+    >
+      <div className={`font-display text-3xl md:text-4xl font-black
+                      ${isSurprise ? 'text-[#8B4513]' : 'text-forest-900 dark:text-honey-600'}`}>
+        {stat.display}{suffix}
+      </div>
+      <div className={`eyebrow mt-1 ${isSurprise ? '!text-[#D4845A]' : 'text-forest-900 dark:text-honey-700'}`}>
+        {stat.label}
+      </div>
+    </div>
   );
 }

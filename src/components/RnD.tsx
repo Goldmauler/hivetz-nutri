@@ -2,6 +2,7 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { FlaskConical, Microscope, BarChart3, ShieldCheck } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
+import { useParallax } from '../hooks/useParallax';
 
 const PILLARS = [
   {
@@ -27,7 +28,7 @@ const PILLARS = [
 ];
 
 export default function RnD() {
-  const ref = useRef<HTMLElement>(null);
+  const { ref, bgY } = useParallax(30);
   const inView = useInView(ref, { once: true, amount: 0.15 });
   const { theme } = useTheme();
   const isSurprise = theme === 'surprise';
@@ -41,33 +42,37 @@ export default function RnD() {
       ref={ref}
       className="relative py-24 md:py-32 border-t border-forest-900/10 dark:border-honey-400/10 overflow-hidden"
     >
-      {/* Surprise colour background — Hivetz_Colour_3.png */}
-      <img
-        src="/Hivetz_Colour_3.png"
-        alt=""
+      {/* Parallax bg wrapper — decorative watermark, same size across all themes */}
+      <motion.div
+        style={{ y: bgY }}
+        className="absolute inset-0 pointer-events-none flex items-center justify-end pr-8"
         aria-hidden
-        className={`${isSurprise ? 'block' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none opacity-90`}
-        draggable={false}
-      />
-      {/* Bag_Green — light mode bg */}
-      <img
-        src="/Bag_Green.png"
-        alt=""
-        aria-hidden
-        className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none opacity-90`}
-        draggable={false}
-      />
-      {/* Bag_Blue — dark mode bg */}
-      <img
-        src="/Bag_Blue.png"
-        alt=""
-        aria-hidden
-        className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none opacity-90`}
-        draggable={false}
-      />
-      {/* Cream overlay */}
+      >
+        <img
+          src="/Hivetz_Colour_3.png"
+          alt=""
+          className={`${isSurprise ? 'block' : 'hidden'} select-none opacity-80`}
+          style={{ width: '100%', maxWidth: '1750px', height: 'auto' }}
+          draggable={false}
+        />
+        <img
+          src="/Bag_Green.png"
+          alt=""
+          className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} select-none opacity-80`}
+         style={{ width: '100%', maxWidth: '1750px', height: 'auto' }}
+          draggable={false}
+        />
+        <img
+          src="/Bag_Blue.png"
+          alt=""
+          className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} select-none opacity-80`}
+          style={{ width: '100%', maxWidth: '1750px', height: 'auto' }}
+          draggable={false}
+        />
+      </motion.div>
+      {/* Cream overlay — heavier so text stays readable */}
       <div className={`absolute inset-0 pointer-events-none
-        ${isSurprise ? 'bg-[rgba(252,237,214,0.75)]' : 'bg-cream-50/80 dark:bg-cream-50/75'}`} />
+        ${isSurprise ? 'bg-[rgba(252,237,214,0.55)]' : 'bg-cream-50/80 dark:bg-cream-50/78'}`} />
       {/* Decorative background blobs */}
       <div className="pointer-events-none absolute -top-32 -left-32 w-96 h-96 rounded-full bg-forest-700/10 dark:bg-honey-400/10 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 -right-32 w-[28rem] h-[28rem] rounded-full bg-honey-400/10 dark:bg-forest-500/10 blur-3xl" />

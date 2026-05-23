@@ -3,6 +3,7 @@ import { Copy, Check, Phone, Mail, Sparkles, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTheme } from '../hooks/useTheme';
+import { useParallax } from '../hooks/useParallax';
 
 type Card = {
   step: string;
@@ -38,7 +39,7 @@ const CARDS: Card[] = [
 const CARD_DELAYS = [0.2, 0.35];
 
 export default function GetStarted() {
-  const ref = useRef<HTMLElement>(null);
+  const { ref, bgY } = useParallax(25);
   const inView = useInView(ref, { once: true, amount: 0.15 });
   const { theme } = useTheme();
   const isSurprise = theme === 'surprise';
@@ -54,7 +55,7 @@ export default function GetStarted() {
         ...(isSurprise && !revealed ? { backgroundColor: 'rgba(252, 237, 214, 1)' } : {}),
       }}
     >
-      {/* ── Surprise_cick reveal image — bright, no overlay ── */}
+      {/* ── Surprise_cick reveal image ── */}
       <AnimatePresence>
         {revealed && (
           <motion.img
@@ -72,7 +73,7 @@ export default function GetStarted() {
         )}
       </AnimatePresence>
 
-      {/* ── Normal backgrounds (hidden when revealed) ── */}
+      {/* ── Parallax normal backgrounds ── */}
       <AnimatePresence>
         {!revealed && (
           <motion.div
@@ -83,36 +84,32 @@ export default function GetStarted() {
             transition={{ duration: 0.4 }}
             className="absolute inset-0 pointer-events-none"
           >
-            {/* Surprise theme chick */}
-            <img
-              src="/Hivetz_chick.png"
-              alt=""
-              aria-hidden
-              className={`${isSurprise ? 'block' : 'hidden'} absolute inset-0 w-full h-full object-contain object-center select-none`}
-              draggable={false}
-            />
-            {/* Light EGG */}
-            <img
-              src="/EGG_Light.png"
-              alt=""
-              aria-hidden
-              className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} absolute inset-0 w-full h-full object-contain object-center select-none`}
-              draggable={false}
-            />
-            {/* Dark EGG */}
-            <img
-              src="/EGG_Dark.png"
-              alt=""
-              aria-hidden
-              className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} absolute inset-0 w-full h-full object-contain object-center select-none`}
-              draggable={false}
-            />
+            <motion.div style={{ y: bgY }} className="absolute inset-[-6%]">
+              <img
+                src="/Hivetz_chick.png"
+                alt=""
+                className={`${isSurprise ? 'block' : 'hidden'} absolute inset-0 w-full h-full object-contain object-center select-none`}
+                draggable={false}
+              />
+              <img
+                src="/EGG_Light.png"
+                alt=""
+                className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} absolute inset-0 w-full h-full object-contain object-center select-none`}
+                draggable={false}
+              />
+              <img
+                src="/EGG_Dark.png"
+                alt=""
+                className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} absolute inset-0 w-full h-full object-contain object-center select-none`}
+                draggable={false}
+              />
+            </motion.div>
             {/* Edge vignette */}
             <div
               className="absolute inset-0"
               style={isSurprise
                 ? { background: 'linear-gradient(to right, rgba(252,237,214,0.65) 0%, transparent 30%, transparent 70%, rgba(252,237,214,0.65) 100%)' }
-                : { background: 'linear-gradient(to right, var(--tw-gradient-from, rgba(253,251,245,0.6)) 0%, transparent 30%, transparent 70%, rgba(253,251,245,0.6) 100%)' }
+                : { background: 'linear-gradient(to right, rgba(253,251,245,0.6) 0%, transparent 30%, transparent 70%, rgba(253,251,245,0.6) 100%)' }
               }
             />
           </motion.div>

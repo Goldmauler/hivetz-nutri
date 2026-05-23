@@ -2,6 +2,8 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { Factory, Microscope, Globe2, Award } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
+import { useCountUp } from '../hooks/useCountUp';
+import { useParallax } from '../hooks/useParallax';
 
 const STATS = [
   { value: 25000, suffix: ' TPA', label: 'Current capacity', icon: Factory },
@@ -16,7 +18,7 @@ const PARAGRAPHS = [
 ];
 
 export default function About() {
-  const ref = useRef<HTMLElement>(null);
+  const { ref, bgY } = useParallax(30);
   const inView = useInView(ref, { once: true, amount: 0.15 });
   const { theme } = useTheme();
   const isSurprise = theme === 'surprise';
@@ -27,34 +29,34 @@ export default function About() {
       ref={ref}
       className="relative py-24 md:py-32 border-t border-forest-900/10 dark:border-honey-400/10 overflow-hidden"
     >
-      {/* ── Section background images ── */}
-      {/* Surprise colour background */}
-      <img
-        src="/Hivetz_Colour_Site.png"
-        alt=""
+      {/* Parallax bg wrapper */}
+      <motion.div
+        style={{ y: bgY }}
+        className="absolute inset-[-6%] pointer-events-none"
         aria-hidden
-        className={`${isSurprise ? 'block' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none`}
-        draggable={false}
-      />
-      {/* Light background */}
-      <img
-        src="/Sectionbackgroud_light.png"
-        alt=""
-        aria-hidden
-        className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none`}
-        draggable={false}
-      />
-      {/* Dark background */}
-      <img
-        src="/Sectionbackgroud_Dark.png"
-        alt=""
-        aria-hidden
-        className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none opacity-70`}
-        draggable={false}
-      />
+      >
+        <img
+          src="/Hivetz_Colour_Site.png"
+          alt=""
+          className={`${isSurprise ? 'block' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center select-none`}
+          draggable={false}
+        />
+        <img
+          src="/Sectionbackgroud_light.png"
+          alt=""
+          className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center select-none`}
+          draggable={false}
+        />
+        <img
+          src="/Sectionbackgroud_Dark.png"
+          alt=""
+          className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center select-none opacity-70`}
+          draggable={false}
+        />
+      </motion.div>
       {/* Cream overlay */}
       <div className={`absolute inset-0 pointer-events-none
-        ${isSurprise ? 'bg-[rgba(252,237,214,0.70)]' : 'bg-cream-50/80 dark:bg-cream-50/75'}`} />
+        ${isSurprise ? 'bg-[rgba(252,237,214,0.65)]' : 'bg-cream-50/75 dark:bg-cream-50/70'}`} />
 
       <div className="relative z-10 container-x">
         <div className="grid lg:grid-cols-2 gap-14 items-start">
@@ -169,6 +171,8 @@ function StatCard({
   inView: boolean;
   isSurprise: boolean;
 }) {
+  const count = useCountUp(value, inView, 1800);
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -180,10 +184,16 @@ function StatCard({
     >
       <Icon size={20} className={`mb-4 ${isSurprise ? 'text-[#D4845A]/70' : 'text-forest-700/60 dark:text-honey-400/70'}`} />
 
-      <div className={`font-display text-3xl md:text-5xl font-black leading-none
-        ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-600'}`}>
-        {value.toLocaleString()}
-        <span className={isSurprise ? 'text-[#8B4513]' : 'text-forest-700 dark:text-honey-400'}>{suffix}</span>
+      {/* Fixed height prevents layout shift during count-up */}
+      <div style={{ height: '4rem', display: 'flex', alignItems: 'flex-end' }}>
+        <span className={`font-display text-3xl md:text-5xl font-black tabular-nums leading-none
+          ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-600'}`}>
+          {count.toLocaleString()}
+        </span>
+        <span className={`font-display text-3xl md:text-5xl font-black leading-none ml-0.5
+          ${isSurprise ? 'text-[#8B4513]' : 'text-forest-700 dark:text-honey-400'}`}>
+          {suffix}
+        </span>
       </div>
 
       <div className={`eyebrow mt-3 ${isSurprise ? '!text-[#D4845A]' : 'text-forest-900 dark:text-honey-700'}`}>
