@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { FlaskConical, Microscope, BarChart3, ShieldCheck } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import { useParallax } from '../hooks/useParallax';
+import ScienceFlow from './ScienceFlow';
 
 const PILLARS = [
   {
@@ -139,6 +140,7 @@ export default function RnD() {
 
         {/* Big highlight bar — slides in from the right when inView */}
         <div ref={barRef}>
+          <ScienceFlow isSurprise={isSurprise} />
           <motion.div
             initial={{ opacity: 0, x: 80 }}
             animate={barInView ? { opacity: 1, x: 0 } : {}}

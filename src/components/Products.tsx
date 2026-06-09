@@ -1,22 +1,26 @@
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { ChevronDown, ArrowRight } from 'lucide-react';
+import { ArrowRight, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { products, productCategories, type Product } from '../data/products';
+import TiltCard from './TiltCard';
+import ProductQuickView from './ProductQuickView';
 
 const INITIAL_COUNT = 8;
 
-export default function Products() {
+type Props = { onEnquire?: () => void };
+
+export default function Products({ onEnquire }: Props) {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.15 });
   const [active, setActive] = useState<(typeof productCategories)[number]>('All');
+  const [preview, setPreview] = useState<Product | null>(null);
 
   const filtered = active === 'All'
     ? products
     : products.filter(p => p.category === active);
 
   const visible = filtered.slice(0, INITIAL_COUNT);
-  const hasMore = filtered.length > INITIAL_COUNT;
 
   const catDot: Record<string, string> = {
     'Premixes':       'bg-forest-700 dark:bg-honey-500',
@@ -34,7 +38,6 @@ export default function Products() {
     >
       <div className="container-x">
 
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -55,7 +58,6 @@ export default function Products() {
           </p>
         </motion.div>
 
-        {/* Category filter pills — spring-animated active background via layoutId */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -66,6 +68,7 @@ export default function Products() {
             <button
               key={c}
               onClick={() => { setActive(c); }}
+              data-cursor="link"
               className={`relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-full
                           text-[11px] font-semibold tracking-[0.18em] uppercase
                           border transition-colors duration-200
@@ -74,7 +77,6 @@ export default function Products() {
                             : 'border-forest-900/15 dark:border-honey-500/20 text-forest-900 dark:text-honey-700/80 hover:border-forest-900/30 dark:hover:border-honey-500/40'
                           }`}
             >
-              {/* Spring-animated background for active pill */}
               {active === c && (
                 <motion.span
                   layoutId="active-pill"
@@ -92,7 +94,6 @@ export default function Products() {
           ))}
         </motion.div>
 
-        {/* Grid */}
         <motion.div
           layout
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
@@ -104,12 +105,12 @@ export default function Products() {
                 product={p}
                 index={i}
                 catDot={catDot[p.category] ?? 'bg-forest-600'}
+                onOpen={() => setPreview(p)}
               />
             ))}
           </AnimatePresence>
         </motion.div>
 
-        {/* View more — navigates to full /products page */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
@@ -118,6 +119,8 @@ export default function Products() {
         >
           <Link
             to="/products"
+            data-cursor="link"
+            data-cursor-label="View all"
             className="group flex items-center gap-2 px-7 py-3 rounded-full
                        bg-forest-900 dark:bg-honey-600 text-cream-50 dark:text-white
                        text-sm font-semibold
@@ -133,6 +136,12 @@ export default function Products() {
           </p>
         </motion.div>
       </div>
+
+      <ProductQuickView
+        product={preview}
+        onClose={() => setPreview(null)}
+        onEnquire={onEnquire}
+      />
     </section>
   );
 }
@@ -141,10 +150,12 @@ function ProductCard({
   product,
   index,
   catDot,
+  onOpen,
 }: {
   product: Product;
   index: number;
   catDot: string;
+  onOpen: () => void;
 }) {
   const Icon = product.icon;
 
@@ -155,62 +166,69 @@ function ProductCard({
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9, y: 10 }}
       transition={{ duration: 0.3, delay: index < INITIAL_COUNT ? index * 0.04 : 0 }}
-      whileHover={{
-        scale: 1.02,
-        y: -3,
-        boxShadow: '0 8px 24px rgba(0,0,0,0.10)',
-        transition: { duration: 0.18 },
-      }}
-      className="group relative rounded-xl
-                 bg-white/70 dark:bg-white/60
-                 border border-forest-900/8 dark:border-honey-500/15
-                 shadow-sm
-                 p-4 flex flex-col gap-3
-                 transition-shadow duration-300"
+      className="relative"
     >
-      {/* Icon + category dot */}
-      <div className="flex items-start justify-between">
-        <span className="h-9 w-9 rounded-lg flex items-center justify-center
-                         bg-forest-900/6 dark:bg-honey-500/12
-                         text-forest-800 dark:text-honey-600
-                         group-hover:scale-110 transition-transform duration-200">
-          <Icon size={17} strokeWidth={2} />
-        </span>
-        <span className={`h-2 w-2 rounded-full mt-1.5 ${catDot}`} />
-      </div>
-
-      {/* Name */}
-      <div>
-        <p className="text-[13px] font-semibold leading-snug
-                      text-forest-900 dark:text-honey-600 line-clamp-2">
-          {product.name}
-        </p>
-        {product.brand && (
-          <p className="mt-0.5 text-[10px] font-medium uppercase tracking-wider
-                        text-forest-700/55 dark:text-honey-700/65">
-            {product.brand}
-          </p>
-        )}
-      </div>
-
-      {/* Tagline */}
-      <p className="text-[11px] leading-relaxed text-forest-900 dark:text-honey-700/65
-                    line-clamp-2 flex-1">
-        {product.tagline}
-      </p>
-
-      {/* Highlight pills */}
-      <div className="flex flex-wrap gap-1">
-        {product.highlights.slice(0, 2).map(h => (
-          <span key={h}
-                className="text-[10px] font-medium px-2 py-0.5 rounded-full
-                           bg-forest-900/5 dark:bg-honey-500/10
-                           text-forest-900 dark:text-honey-700/75
-                           border border-forest-900/8 dark:border-honey-500/12">
-            {h}
+      <TiltCard
+        onClick={onOpen}
+        max={7}
+        className="group relative rounded-xl
+                   bg-white/70 dark:bg-white/60
+                   border border-forest-900/8 dark:border-honey-500/15
+                   shadow-sm hover:shadow-[0_12px_30px_-12px_rgba(20,83,45,0.25)]
+                   p-4 flex flex-col gap-3
+                   transition-shadow duration-300 product-card cursor-pointer
+                   h-full"
+      >
+        <div className="flex items-start justify-between" style={{ transform: 'translateZ(20px)' }}>
+          <span className="h-9 w-9 rounded-lg flex items-center justify-center
+                           bg-forest-900/6 dark:bg-honey-500/12
+                           text-forest-800 dark:text-honey-600
+                           group-hover:scale-110 transition-transform duration-200">
+            <Icon size={17} strokeWidth={2} />
           </span>
-        ))}
-      </div>
+          <span className={`h-2 w-2 rounded-full mt-1.5 ${catDot} animate-pulse`} />
+        </div>
+
+        <div style={{ transform: 'translateZ(16px)' }}>
+          <p className="text-[13px] font-semibold leading-snug
+                        text-forest-900 dark:text-honey-600 line-clamp-2">
+            {product.name}
+          </p>
+          {product.brand && (
+            <p className="mt-0.5 text-[10px] font-medium uppercase tracking-wider
+                          text-forest-700/55 dark:text-honey-700/65">
+              {product.brand}
+            </p>
+          )}
+        </div>
+
+        <p className="text-[11px] leading-relaxed text-forest-900 dark:text-honey-700/65
+                      line-clamp-2 flex-1" style={{ transform: 'translateZ(10px)' }}>
+          {product.tagline}
+        </p>
+
+        <div className="flex flex-wrap gap-1" style={{ transform: 'translateZ(10px)' }}>
+          {product.highlights.slice(0, 2).map(h => (
+            <span key={h}
+                  className="text-[10px] font-medium px-2 py-0.5 rounded-full
+                             bg-forest-900/5 dark:bg-honey-500/10
+                             text-forest-900 dark:text-honey-700/75
+                             border border-forest-900/8 dark:border-honey-500/12">
+              {h}
+            </span>
+          ))}
+        </div>
+
+        {/* Hover overlay — "Quick view" hint */}
+        <div className="absolute inset-x-0 bottom-0 rounded-b-xl pointer-events-none
+                        opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                        flex items-center justify-center gap-1.5 py-2
+                        bg-gradient-to-t from-forest-900/85 to-transparent
+                        dark:from-honey-600/85
+                        text-[10px] font-semibold tracking-[0.18em] uppercase text-white">
+          <Eye size={11} /> Quick view
+        </div>
+      </TiltCard>
     </motion.div>
   );
 }

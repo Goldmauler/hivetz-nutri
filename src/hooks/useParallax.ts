@@ -25,7 +25,7 @@ export function useParallax(strength = 60, smooth = 80): {
     stiffness: smooth,
     damping: 20,
     mass: 0.5,
-  }) as MotionValue<string>;
+  }) as unknown as MotionValue<string>;
 
   return { ref, bgY };
 }

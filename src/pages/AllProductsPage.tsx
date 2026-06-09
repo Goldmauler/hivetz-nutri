@@ -1,14 +1,16 @@
 import { motion, useInView, AnimatePresence } from 'framer-motion';
-import { useRef, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { useRef, useState, useMemo } from 'react';
+import { ChevronDown, Search, X } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import EnquiryModal from '../components/EnquiryModal';
+import ProductQuickView from '../components/ProductQuickView';
 import { products, productCategories, type Product } from '../data/products';
 import { useTheme } from '../hooks/useTheme';
 
 export default function AllProductsPage() {
   const [enquiryOpen, setEnquiryOpen] = useState(false);
+  const [preview, setPreview] = useState<Product | null>(null);
   const { theme } = useTheme();
   const isSurprise = theme === 'surprise';
 
@@ -20,10 +22,15 @@ export default function AllProductsPage() {
       <Header onEnquire={() => setEnquiryOpen(true)} />
       <main>
         <HeroSection isSurprise={isSurprise} />
-        <ProductsSection isSurprise={isSurprise} />
+        <ProductsSection isSurprise={isSurprise} onOpen={setPreview} />
       </main>
       <Footer />
       <EnquiryModal open={enquiryOpen} onClose={() => setEnquiryOpen(false)} />
+      <ProductQuickView
+        product={preview}
+        onClose={() => setPreview(null)}
+        onEnquire={() => setEnquiryOpen(true)}
+      />
     </div>
   );
 }
@@ -57,14 +64,25 @@ function HeroSection({ isSurprise }: { isSurprise: boolean }) {
   );
 }
 
-function ProductsSection({ isSurprise }: { isSurprise: boolean }) {
+function ProductsSection({ isSurprise, onOpen }: { isSurprise: boolean; onOpen: (p: Product) => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.05 });
   const [active, setActive] = useState<(typeof productCategories)[number]>('All');
+  const [query, setQuery] = useState('');
 
-  const filtered = active === 'All'
-    ? products
-    : products.filter(p => p.category === active);
+  const filtered = useMemo(() => {
+    const byCat = active === 'All'
+      ? products
+      : products.filter(p => p.category === active);
+    if (!query.trim()) return byCat;
+    const q = query.toLowerCase();
+    return byCat.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.tagline.toLowerCase().includes(q) ||
+      (p.brand?.toLowerCase().includes(q) ?? false) ||
+      p.highlights.some(h => h.toLowerCase().includes(q))
+    );
+  }, [active, query]);
 
   const catDot: Record<string, string> = {
     'Premixes':       'bg-forest-700 dark:bg-honey-500',
@@ -78,11 +96,44 @@ function ProductsSection({ isSurprise }: { isSurprise: boolean }) {
     <section className="py-16 md:py-24">
       <div ref={ref} className="container-x">
 
-        {/* Category filter */}
+        {/* Search input */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
+          className="mb-6 max-w-md"
+        >
+          <div className={`relative flex items-center rounded-full border
+            ${isSurprise
+              ? 'border-[#8B4513]/20 bg-[rgba(252,237,214,0.7)]'
+              : 'border-forest-900/15 dark:border-honey-500/25 bg-white/60'
+            }`}>
+            <Search size={14} className={`absolute left-4 ${isSurprise ? 'text-[#8B4513]/60' : 'text-forest-900/50 dark:text-honey-700/60'}`} />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search products, brands, or ingredients…"
+              className={`w-full bg-transparent pl-11 pr-10 py-2.5 text-sm outline-none
+                ${isSurprise ? 'text-[#5C2D0A] placeholder:text-[#5C2D0A]/45' : 'text-forest-900 dark:text-honey-600 placeholder:text-forest-900/40 dark:placeholder:text-honey-700/45'}`}
+            />
+            {query && (
+              <button
+                onClick={() => setQuery('')}
+                aria-label="Clear search"
+                className={`absolute right-3 h-6 w-6 rounded-full flex items-center justify-center
+                  ${isSurprise ? 'text-[#8B4513] hover:bg-[#8B4513]/10' : 'text-forest-900 dark:text-honey-700 hover:bg-forest-900/8 dark:hover:bg-honey-500/12'}`}
+              >
+                <X size={12} />
+              </button>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Category filter */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.1 }}
           className="flex flex-wrap gap-2 mb-10"
         >
           {productCategories.map(c => (
@@ -123,7 +174,7 @@ function ProductsSection({ isSurprise }: { isSurprise: boolean }) {
           animate={inView ? { opacity: 1 } : {}}
           className={`mb-6 eyebrow ${isSurprise ? 'text-[#D4845A]/70' : 'text-forest-900/50 dark:text-honey-700/60'}`}
         >
-          {filtered.length} products
+          {filtered.length} {filtered.length === 1 ? 'product' : 'products'}
         </motion.p>
 
         {/* Grid */}
@@ -139,10 +190,17 @@ function ProductsSection({ isSurprise }: { isSurprise: boolean }) {
                 index={i}
                 catDot={catDot[p.category] ?? 'bg-forest-600'}
                 isSurprise={isSurprise}
+                onOpen={() => onOpen(p)}
               />
             ))}
           </AnimatePresence>
         </motion.div>
+
+        {filtered.length === 0 && (
+          <p className={`text-center py-12 ${isSurprise ? 'text-[#5C2D0A]/65' : 'text-forest-900/60 dark:text-honey-700/65'}`}>
+            No products match "{query}".
+          </p>
+        )}
       </div>
     </section>
   );
@@ -153,11 +211,13 @@ function ProductCard({
   index,
   catDot,
   isSurprise,
+  onOpen,
 }: {
   product: Product;
   index: number;
   catDot: string;
   isSurprise: boolean;
+  onOpen: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const Icon = p.icon;
@@ -170,7 +230,13 @@ function ProductCard({
       exit={{ opacity: 0, scale: 0.92, y: 10 }}
       transition={{ duration: 0.25, delay: Math.min(index * 0.03, 0.4) }}
       whileHover={{ y: -2 }}
-      onClick={() => setOpen(v => !v)}
+      onClick={(e) => {
+        // Double-click → expand inline. Single click → open modal preview.
+        if (e.detail === 2) setOpen(v => !v);
+        else onOpen();
+      }}
+      data-cursor="link"
+      data-cursor-label="View"
       className="group relative rounded-xl shadow-sm hover:shadow-md
                  p-4 flex flex-col gap-2 cursor-pointer transition-shadow duration-300
                  border"

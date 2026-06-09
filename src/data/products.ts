@@ -30,6 +30,9 @@ export type Product = {
   description: string;
   icon: LucideIcon;
   highlights: string[];
+  benefits?: string[];
+  composition?: string;
+  application?: string;
 };
 
 export const productCategories = [
@@ -47,32 +50,53 @@ export const products: Product[] = [
   {
     id: 'vp-broiler',
     name: 'Vitamin Premix — For Broiler',
+    brand: 'HIBRO PX+',
     category: 'Premixes',
     tagline: 'Peak growth & feed conversion for commercial broilers',
     description:
       'High-density vitamin stack engineered for modern fast-growing broiler genetics. Optimises daily weight gain, uniformity, and FCR across starter, grower, and finisher phases.',
     icon: Sparkles,
     highlights: ['A · D3 · E · K3', 'Full B-complex', 'Heat-stable'],
+    benefits: [
+      'Ensures ideal broiler growth and production performance',
+      'Enhances immunity and magnificent meat yield',
+      'Delivers healthy liveability through finisher phase',
+    ],
+    application: 'Starter / Grower / Finisher diets at recommended inclusion.',
   },
   {
     id: 'vp-breeder',
     name: 'Vitamin Premix — For Breeder',
+    brand: 'HIBREED PX',
     category: 'Premixes',
     tagline: 'Fertility & hatchability support for breeder flocks',
     description:
       'Elevated Vitamin E, biotin, and folic acid to maximise fertility, embryo viability, and first-week chick quality in parent stock.',
     icon: Sparkles,
     highlights: ['Hatchability boost', 'Elevated Vit E', 'Chick livability'],
+    benefits: [
+      'Assures optimum vitamin levels for improved growth and reproduction',
+      'Protects against vitamin deficiencies — excellent hatchability',
+      'Finest bird uniformity and egg quality',
+    ],
+    application: 'Pre-breeder through peak production.',
   },
   {
     id: 'vp-layer',
     name: 'Vitamin Premix — For Layer',
+    brand: 'LAY MIX PX',
     category: 'Premixes',
     tagline: 'Sustained production & shell quality for layers',
     description:
       'Balanced vitamin profile supporting persistent egg production, shell strength, and yolk colour from peak production through late lay.',
     icon: Wheat,
     highlights: ['Persistency', 'Shell strength', 'Yolk pigmenter'],
+    benefits: [
+      'Achieves egg uniformity and consistency',
+      'Enhances bird immunity for better productivity',
+      'Supports optimum growth and improves egg production',
+    ],
+    application: 'In-plant premix from peak through late lay.',
   },
   {
     id: 'vp-country',

@@ -1,7 +1,11 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
-import { useInView } from 'framer-motion';
+import HoneycombCanvas from './HoneycombCanvas';
+import SplitText from './SplitText';
+import Marquee from './Marquee';
+import MagneticWrap from './MagneticWrap';
 
 const STATS: Array<{ raw: number; display: string; label: string }> = [
   { raw: 25000, display: '25,000', label: 'TPA capacity' },
@@ -10,21 +14,15 @@ const STATS: Array<{ raw: number; display: string; label: string }> = [
   { raw: 400,   display: '400',    label: 'Active customers' },
 ];
 
-/* 20 particles with deterministic-but-varied positions/sizes/durations */
-const PARTICLES = Array.from({ length: 20 }, (_, i) => ({
-  id: i,
-  left: ((i * 37 + 11) % 97) + 1,   // 2–98% spread
-  size: 2 + (i % 5),                 // 2–6 px
-  duration: 6 + (i % 7),             // 6–12 s
-  delay: -(i * 1.3),                 // stagger start so they don't all begin together
-  opacity: 0.15 + (i % 5) * 0.06,
-}));
-
-const HEADLINE_LINES = [
-  'THE PREMIX',
-  'COMPANY',
-  'THAT GROWS WITH',
-  'YOUR FLOCK.',
+const TRUST_BADGES = [
+  'GMP+ B2 CERTIFIED',
+  'FAMI-QS COMPLIANT',
+  '25,000 TPA FACILITY',
+  '400+ FARMS SERVED',
+  'IN-HOUSE R&D LAB',
+  'HPLC · AAS · ELISA',
+  '12 PRODUCT FAMILIES',
+  'MADE IN SRI LANKA',
 ];
 
 export default function Hero() {
@@ -33,68 +31,56 @@ export default function Hero() {
   const isSurprise = theme === 'surprise';
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
 
-  const yBg     = useTransform(scrollYProgress, [0, 1], ['0%', '22%']);
-  const scaleBg = useTransform(scrollYProgress, [0, 1], [1, 1.06]);
-  const yText   = useTransform(scrollYProgress, [0, 1], ['0%', '-8%']);
+  const yBg     = useTransform(scrollYProgress, [0, 1], ['0%', '24%']);
+  const scaleBg = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+  const yText   = useTransform(scrollYProgress, [0, 1], ['0%', '-12%']);
   const fadeOut = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+
+  const headlineColor = isSurprise
+    ? 'text-[#5C2D0A]'
+    : 'text-forest-900 dark:text-honey-600';
 
   return (
     <section
       id="home"
       ref={ref}
-      className="relative min-h-[100vh] flex items-center pt-24 pb-16 overflow-hidden"
+      className="relative min-h-[100vh] flex items-center pt-24 pb-24 overflow-hidden"
     >
-      {/* Parallax background */}
+      {/* Ken Burns parallax background */}
       <motion.div
         style={{ y: yBg, scale: scaleBg }}
         className="absolute inset-0 -z-10"
         aria-hidden
       >
-        {/* Surprise colour background */}
-        <img
+        <motion.img
           src="/Hivetz_colour_1.png"
           alt=""
           className={`${isSurprise ? 'block' : 'hidden'} absolute inset-0 h-full w-full object-cover object-center select-none`}
           draggable={false}
+          animate={{ scale: [1, 1.04, 1] }}
+          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
         />
-        {/* Light background */}
-        <img
+        <motion.img
           src="/hivetz_light_background.png"
           alt=""
           className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} absolute inset-0 h-full w-full object-cover object-center select-none`}
           draggable={false}
+          animate={{ scale: [1, 1.04, 1] }}
+          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
         />
-        {/* Dark background */}
-        <img
+        <motion.img
           src="/hivetz_dark_background.png"
           alt=""
           className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} absolute inset-0 h-full w-full object-cover object-center select-none`}
           draggable={false}
+          animate={{ scale: [1, 1.04, 1] }}
+          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
         />
       </motion.div>
 
-      {/* Floating particles */}
-      <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden>
-        {PARTICLES.map(p => (
-          <motion.span
-            key={p.id}
-            style={{
-              left: `${p.left}%`,
-              bottom: '-8px',
-              width: p.size,
-              height: p.size,
-              opacity: p.opacity,
-            }}
-            className={`absolute rounded-full ${isSurprise ? 'bg-[#F5A623]' : 'bg-forest-800 dark:bg-honey-500'}`}
-            animate={{ y: [0, -(window?.innerHeight ?? 900) - 20] }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              delay: p.delay,
-              ease: 'linear',
-            }}
-          />
-        ))}
+      {/* Honeycomb canvas particles */}
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <HoneycombCanvas />
       </div>
 
       {/* Vignette */}
@@ -119,47 +105,37 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className={`eyebrow mb-8 ${isSurprise ? 'text-[#D4845A]' : 'text-forest-800 dark:text-honey-700'}`}
+          className={`eyebrow mb-8 inline-flex items-center gap-3
+            ${isSurprise ? 'text-[#D4845A]' : 'text-forest-800 dark:text-honey-700'}`}
         >
-          Made in Sri Lanka
+          <span className={`h-px w-8 ${isSurprise ? 'bg-[#D4845A]' : 'bg-forest-800 dark:bg-honey-700'}`} />
+          Made in Sri Lanka · Est. 2017
+          <span className={`h-px w-8 ${isSurprise ? 'bg-[#D4845A]' : 'bg-forest-800 dark:bg-honey-700'}`} />
         </motion.p>
 
-        {/* Headline — each line staggers in */}
+        {/* Kinetic headline */}
         <h1
           className={`display-h
                      text-[42px] sm:text-[60px] md:text-[84px] lg:text-[106px] xl:text-[122px]
-                     ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-600'}`}
+                     ${headlineColor}`}
         >
-          {HEADLINE_LINES.map((line, i) => (
-            <motion.span
-              key={line}
-              className="block"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.7,
-                delay: 0.3 + i * 0.15,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            >
-              {line}
-            </motion.span>
-          ))}
+          <div className="block"><SplitText text="THE PREMIX" stagger={0.03} delay={0.25} /></div>
+          <div className="block"><SplitText text="COMPANY" stagger={0.03} delay={0.45} /></div>
+          <div className="block"><SplitText text="THAT GROWS WITH" stagger={0.025} delay={0.65} /></div>
+          <div className="block"><SplitText text="YOUR FLOCK." stagger={0.03} delay={0.9} /></div>
         </h1>
 
         {/* Horizontal rule with shimmer */}
         <div className={`relative mt-6 h-[3px] w-full overflow-hidden rounded-full
-                        ${isSurprise ? 'bg-[#D4845A]' : 'bg-forest-900 dark:bg-honey-600'}`}>
-          {/* draw-in */}
+                        ${isSurprise ? 'bg-[#D4845A]/30' : 'bg-forest-900/20 dark:bg-honey-600/40'}`}>
           <motion.div
             className={`absolute inset-0 origin-left ${isSurprise ? 'bg-[#D4845A]' : 'bg-forest-900 dark:bg-honey-600'}`}
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
-            transition={{ duration: 1.1, delay: 1.1 }}
+            transition={{ duration: 1.1, delay: 1.2 }}
           />
-          {/* shimmer sweep */}
           <motion.div
-            className="absolute inset-y-0 w-24 bg-gradient-to-r from-transparent via-white/70 to-transparent"
+            className="absolute inset-y-0 w-24 bg-gradient-to-r from-transparent via-white/80 to-transparent"
             initial={{ x: '-100%' }}
             animate={{ x: '110vw' }}
             transition={{ duration: 1.2, delay: 2.4, ease: 'easeInOut' }}
@@ -170,7 +146,7 @@ export default function Hero() {
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.85 }}
+          transition={{ duration: 0.8, delay: 1.4 }}
           className={`mx-auto mt-8 max-w-2xl text-base md:text-lg leading-relaxed
                      ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-800'}`}
         >
@@ -179,38 +155,74 @@ export default function Hero() {
           facility and delivered with the science your flock deserves.
         </motion.p>
 
-        {/* CTAs */}
+        {/* CTAs (magnetic) */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.0 }}
+          transition={{ duration: 0.8, delay: 1.55 }}
           className="mt-10 flex flex-wrap items-center justify-center gap-3"
         >
-          <a href="#get-started" className="btn-primary">
-            Get a Custom Formulation
-          </a>
-          <a href="#products" className="btn-ghost">
-            Explore Products
-          </a>
+          <MagneticWrap strength={0.25}>
+            <a href="#get-started" className="btn-primary" data-cursor="link" data-cursor-label="Talk to us">
+              Get a Custom Formulation
+            </a>
+          </MagneticWrap>
+          <MagneticWrap strength={0.2}>
+            <a href="#products" className="btn-ghost" data-cursor="link" data-cursor-label="Browse">
+              Explore Products
+            </a>
+          </MagneticWrap>
         </motion.div>
 
         {/* Stats strip */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
-          className={`mt-16 grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden
+          transition={{ duration: 0.8, delay: 1.7 }}
+          className={`mt-14 grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden
                      border
                      ${isSurprise
                        ? 'border-[#D4845A]/20 bg-[#D4845A]/8'
                        : 'border-forest-900/10 dark:border-honey-500/15 bg-forest-900/5 dark:bg-honey-500/10'
                      }`}
         >
-          {STATS.map((s) => (
-            <HeroStatCell key={s.label} stat={s} isSurprise={isSurprise} />
+          {STATS.map((s, i) => (
+            <HeroStatCell key={s.label} stat={s} isSurprise={isSurprise} delay={1.85 + i * 0.08} />
           ))}
         </motion.div>
       </motion.div>
+
+      {/* Scroll cue */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.7 }}
+        transition={{ delay: 2.2, duration: 0.6 }}
+        style={{ opacity: fadeOut }}
+        className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10
+                   flex flex-col items-center gap-2 pointer-events-none"
+      >
+        <span className={`eyebrow ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-700'}`}>
+          Scroll
+        </span>
+        <motion.span
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+          className={isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-700'}
+        >
+          <ChevronDown size={18} strokeWidth={1.5} />
+        </motion.span>
+      </motion.div>
+
+      {/* Trust marquee at the bottom */}
+      <div
+        className={`absolute bottom-0 left-0 right-0 py-3 border-t backdrop-blur-sm
+          ${isSurprise
+            ? 'bg-[rgba(252,237,214,0.78)] border-[#8B4513]/15 text-[#5C2D0A]'
+            : 'bg-cream-50/78 border-forest-900/10 dark:border-honey-500/20 text-forest-900 dark:text-honey-700'
+          }`}
+      >
+        <Marquee items={TRUST_BADGES} speed={42} dotClassName={isSurprise ? 'bg-[#D4845A]' : 'bg-current opacity-50'} />
+      </div>
     </section>
   );
 }
@@ -218,14 +230,20 @@ export default function Hero() {
 function HeroStatCell({
   stat,
   isSurprise,
+  delay,
 }: {
   stat: { raw: number; display: string; label: string };
   isSurprise: boolean;
+  delay: number;
 }) {
   const suffix = stat.label.includes('families') || stat.label.includes('customers') ? '+' : '';
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -2 }}
       className="bg-cream-50/90 dark:bg-cream-50/90 backdrop-blur-sm px-6 py-5 text-left"
       style={isSurprise ? { background: 'rgba(252, 237, 214, 0.92)' } : {}}
     >
@@ -236,6 +254,6 @@ function HeroStatCell({
       <div className={`eyebrow mt-1 ${isSurprise ? '!text-[#D4845A]' : 'text-forest-900 dark:text-honey-700'}`}>
         {stat.label}
       </div>
-    </div>
+    </motion.div>
   );
 }

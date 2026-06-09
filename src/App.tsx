@@ -19,6 +19,7 @@ import FloatingActions from './components/FloatingActions';
 
 import AllProductsPage from './pages/AllProductsPage';
 import FoundersPage from './pages/FoundersPage';
+import PageTransition from './components/PageTransition';
 
 function HomePage() {
   const [enquiryOpen, setEnquiryOpen] = useState(false);
@@ -60,7 +61,7 @@ function HomePage() {
         <Hero />
         <GetStarted />
         <DemoChat />
-        <Products />
+        <Products onEnquire={() => setEnquiryOpen(true)} />
         <About />
         <RnD />
         <Testimonials />
@@ -76,10 +77,13 @@ function HomePage() {
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/"           element={<HomePage />} />
-      <Route path="/products"   element={<AllProductsPage />} />
-      <Route path="/founders"   element={<FoundersPage />} />
-    </Routes>
+    <>
+      <PageTransition />
+      <Routes>
+        <Route path="/"           element={<HomePage />} />
+        <Route path="/products"   element={<AllProductsPage />} />
+        <Route path="/founders"   element={<FoundersPage />} />
+      </Routes>
+    </>
   );
 }
