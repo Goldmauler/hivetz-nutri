@@ -20,9 +20,9 @@ const CARDS: Card[] = [
     step: '1. CALL',
     title: 'Talk to our team',
     command: 'hivetz call --line=sales',
-    display: '+91 89 407 68881',
+    display: '+91 70100 71262',
     icon: Phone,
-    copyValue: '+918940768881',
+    copyValue: '+917010071262',
     copyLabel: 'Phone number copied',
   },
   {

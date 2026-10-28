@@ -100,7 +100,7 @@ export default function Footer() {
               Get in touch
             </h4>
             <ul className="space-y-3 text-sm text-forest-900 dark:text-[#1a3490] leading-relaxed">
-              <li className="flex gap-2"><Phone size={15} className="mt-0.5 shrink-0" /><a href="tel:+918940768881" className="underline-anim">+91 89407 68881</a></li>
+              <li className="flex gap-2"><Phone size={15} className="mt-0.5 shrink-0" /><a href="tel:+917010071262" className="underline-anim">+91 70100 71262</a></li>
               <li className="flex gap-2"><Mail size={15} className="mt-0.5 shrink-0" /><a href="mailto:info@florabiochem.com" className="underline-anim">info@florabiochem.com</a></li>
               <li className="flex gap-2"><MapPin size={15} className="mt-0.5 shrink-0" /><span>B-103, Orbit 11, Akshaya 1432 Trichy Road, Coimbatore 641 018</span></li>
             </ul>

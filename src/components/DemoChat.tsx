@@ -202,7 +202,7 @@ export default function DemoChat() {
                 <div className={`mt-5 flex items-center gap-2 px-3 py-2.5 rounded-xl border ${borderColor}`}>
                   <span className={`flex-shrink-0 ${isSurprise ? 'text-[#D4845A]' : 'text-forest-700 dark:text-honey-400'}`}>▸</span>
                   <span className={`font-mono text-xs flex-1 truncate ${isSurprise ? 'text-[#5C2D0A]/60' : 'text-forest-900/75 dark:text-honey-700/50'}`}>
-                    Next question · anything else, WhatsApp +91 89407 68881
+                    Next question · anything else, WhatsApp +91 70100 71262
                   </span>
                   <button
                     className={`flex-shrink-0 h-7 w-7 rounded-lg flex items-center justify-center hover:scale-105 transition

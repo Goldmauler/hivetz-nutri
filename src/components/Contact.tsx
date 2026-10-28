@@ -9,8 +9,8 @@ const CONTACT = [
   {
     icon: Phone,
     label: 'Phone',
-    value: '+91 89 407 68881',
-    copy: '+918940768881',
+    value: '+91 70100 71262',
+    copy: '+917010071262',
   },
   {
     icon: Mail,

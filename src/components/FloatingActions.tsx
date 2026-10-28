@@ -3,7 +3,7 @@ import { MessageCircle, ArrowUp } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTheme } from '../hooks/useTheme';
 
-const WHATSAPP_NUMBER = '918940768881';
+const WHATSAPP_NUMBER = '917010071262';
 const WHATSAPP_MSG    = encodeURIComponent(
   "Hi Hivetz! I'd like to enquire about your poultry premix products."
 );

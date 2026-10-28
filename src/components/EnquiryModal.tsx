@@ -54,7 +54,7 @@ export default function EnquiryModal({ open, onClose }: Props) {
       .filter(Boolean)
       .join('\n');
     setSubmitting(true);
-    window.open(`https://wa.me/918940768881?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+    window.open(`https://wa.me/917010071262?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
     setSubmitting(false);
     toast.success('Your enquiry is ready in WhatsApp. Press send there.');
     setForm({ name: '', company: '', phone: '', species: 'Broiler', message: '' });
