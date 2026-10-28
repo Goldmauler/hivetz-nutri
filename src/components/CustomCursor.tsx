@@ -3,8 +3,13 @@ import { useTheme } from '../hooks/useTheme';
 
 type Variant = 'default' | 'link' | 'media' | 'text';
 
+/**
+ * A ring that follows the pointer and grows over links (with an optional label). The system
+ * pointer stays visible: it is drawn by the OS and never lags, however busy the page is. The
+ * ring eases by elapsed time, not per frame, so it hugs the pointer at any frame rate, and it
+ * uses no blend mode (a blended layer made the browser recomposite the page on every move).
+ */
 export default function CustomCursor() {
-  const dot = useRef<HTMLDivElement>(null);
   const ring = useRef<HTMLDivElement>(null);
   const labelEl = useRef<HTMLDivElement>(null);
   const [variant, setVariant] = useState<Variant>('default');
@@ -24,70 +29,72 @@ export default function CustomCursor() {
   useEffect(() => {
     if (coarse) return;
 
-    let mx = window.innerWidth / 2;
-    let my = window.innerHeight / 2;
+    let mx = -100;
+    let my = -100;
     let rx = mx;
     let ry = my;
+    let seen = false;
     let rafId = 0;
+    let last = performance.now();
 
-    const move = (e: MouseEvent) => {
+    const place = () => {
+      if (ring.current) ring.current.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
+      if (labelEl.current) labelEl.current.style.transform = `translate3d(${rx}px, ${ry + 30}px, 0) translate(-50%, 0)`;
+    };
+
+    const move = (e: PointerEvent) => {
       mx = e.clientX;
       my = e.clientY;
-      if (hidden) setHidden(false);
-      if (dot.current) {
-        dot.current.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
+      if (!seen) {
+        // first sighting: start on the pointer instead of sweeping in from a corner
+        seen = true;
+        rx = mx;
+        ry = my;
+        place();
+        setHidden(false);
       }
     };
 
-    const tick = () => {
-      rx += (mx - rx) * 0.18;
-      ry += (my - ry) * 0.18;
-      if (ring.current) {
-        ring.current.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
-      }
-      if (labelEl.current) {
-        labelEl.current.style.transform = `translate3d(${rx}px, ${ry + 28}px, 0) translate(-50%, 0)`;
-      }
+    const tick = (now: number) => {
+      const dt = Math.min(0.1, (now - last) / 1000);
+      last = now;
+      const k = 1 - Math.exp(-dt * 38); // ~95 % of the way in 80 ms
+      rx += (mx - rx) * k;
+      ry += (my - ry) * k;
+      place();
       rafId = requestAnimationFrame(tick);
     };
 
-    const onOver = (e: MouseEvent) => {
+    const onOver = (e: PointerEvent) => {
       const t = e.target as HTMLElement | null;
       if (!t) return;
       const a = t.closest<HTMLElement>('[data-cursor]');
       if (a) {
-        const v = (a.dataset.cursor as Variant) || 'link';
-        setVariant(v);
+        setVariant((a.dataset.cursor as Variant) || 'link');
         setLabel(a.dataset.cursorLabel || '');
         return;
       }
-      const clickable = t.closest('a, button, [role="button"], input, textarea, label');
-      if (clickable) {
-        setVariant('link');
-        setLabel('');
-        return;
-      }
-      setVariant('default');
+      setVariant(t.closest('a, button, [role="button"], input, textarea, select, label') ? 'link' : 'default');
       setLabel('');
     };
 
     const onLeave = () => setHidden(true);
-    const onEnter = () => setHidden(false);
+    const onEnter = () => seen && setHidden(false);
 
-    window.addEventListener('mousemove', move);
-    window.addEventListener('mouseover', onOver);
+    window.addEventListener('pointermove', move, { passive: true });
+    window.addEventListener('pointerover', onOver, { passive: true });
     document.documentElement.addEventListener('mouseleave', onLeave);
     document.documentElement.addEventListener('mouseenter', onEnter);
     rafId = requestAnimationFrame(tick);
 
     return () => {
-      window.removeEventListener('mousemove', move);
-      window.removeEventListener('mouseover', onOver);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerover', onOver);
       document.documentElement.removeEventListener('mouseleave', onLeave);
       document.documentElement.removeEventListener('mouseenter', onEnter);
       cancelAnimationFrame(rafId);
     };
-  }, [coarse, hidden]);
+  }, [coarse]);
 
   if (coarse) return null;
 
@@ -98,12 +105,9 @@ export default function CustomCursor() {
     :                      '#14532D';
 
   const ringSize =
-    variant === 'media' ? 84
-    : variant === 'link'  ? 56
-    : variant === 'text'  ? 4
-    :                       36;
-
-  const dotSize = variant === 'text' ? 14 : 6;
+    variant === 'media' ? 72
+    : variant === 'link'  ? 46
+    :                       30;
 
   return (
     <>
@@ -118,31 +122,12 @@ export default function CustomCursor() {
           height: ringSize,
           borderRadius: '50%',
           border: `1.5px solid ${color}`,
-          mixBlendMode: 'difference',
           pointerEvents: 'none',
           zIndex: 9998,
-          opacity: hidden ? 0 : variant === 'text' ? 0 : 0.8,
-          transition: 'width 0.25s cubic-bezier(0.22, 1, 0.36, 1), height 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s, background 0.2s',
+          opacity: hidden || variant === 'text' ? 0 : variant === 'default' ? 0.45 : 0.8,
+          transition: 'width 0.22s cubic-bezier(0.22, 1, 0.36, 1), height 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s, background-color 0.2s',
           willChange: 'transform',
-          background: variant === 'media' ? `${color}22` : 'transparent',
-        }}
-      />
-      <div
-        ref={dot}
-        aria-hidden
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: dotSize,
-          height: dotSize,
-          borderRadius: variant === 'text' ? '2px' : '50%',
-          background: color,
-          pointerEvents: 'none',
-          zIndex: 9999,
-          opacity: hidden ? 0 : 1,
-          transition: 'width 0.2s, height 0.2s, opacity 0.2s, border-radius 0.2s',
-          willChange: 'transform',
+          backgroundColor: variant === 'link' || variant === 'media' ? `${color}14` : 'transparent',
         }}
       />
       <div
@@ -162,7 +147,7 @@ export default function CustomCursor() {
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
           color,
-          background: 'rgba(253,251,245,0.9)',
+          background: 'rgba(253,251,245,0.92)',
           padding: '4px 8px',
           borderRadius: 999,
           border: `1px solid ${color}33`,
@@ -171,13 +156,6 @@ export default function CustomCursor() {
       >
         {label}
       </div>
-      <style>{`
-        @media (pointer: fine) {
-          html, body, a, button, [role="button"], input, textarea, label {
-            cursor: none !important;
-          }
-        }
-      `}</style>
     </>
   );
 }
