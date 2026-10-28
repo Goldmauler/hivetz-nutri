@@ -11,7 +11,6 @@ import DemoChat from './components/DemoChat';
 import Products from './components/Products';
 import About from './components/About';
 import RnD from './components/RnD';
-import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import EnquiryModal from './components/EnquiryModal';
@@ -36,6 +35,8 @@ function HomePage() {
         className={`fixed top-0 left-0 right-0 h-[3px] z-[60] origin-left
           ${isSurprise
             ? 'bg-gradient-to-r from-[#F5A623] via-[#D4845A] to-[#8B4513]'
+            : theme === 'brand'
+            ? 'logo-gradient'
             : 'bg-gradient-to-r from-forest-500 via-forest-700 to-forest-900 dark:from-honey-400 dark:via-honey-500 dark:to-honey-600'
           }`}
       />
@@ -44,10 +45,12 @@ function HomePage() {
         position="bottom-right"
         toastOptions={{
           style: {
-            background: '#FDFBF5',
-            color:      theme === 'dark' ? '#2A4FD8' : '#14532D',
+            background: theme === 'brand' ? '#FDF6EA' : '#FDFBF5',
+            color:      theme === 'dark' ? '#2A4FD8' : theme === 'brand' ? '#005698' : '#14532D',
             border:     theme === 'dark'
               ? '1px solid rgba(59,104,245,0.25)'
+              : theme === 'brand'
+              ? '1px solid rgba(244,155,15,0.45)'
               : '1px solid rgba(20,83,45,0.20)',
             fontSize: '14px',
             fontWeight: 500,
@@ -64,7 +67,6 @@ function HomePage() {
         <Products onEnquire={() => setEnquiryOpen(true)} />
         <About />
         <RnD />
-        <Testimonials />
         <Contact onEnquire={() => setEnquiryOpen(true)} />
       </main>
 

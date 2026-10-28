@@ -124,6 +124,13 @@ export default function ProductQuickView({ product, onClose, onEnquire }: Props)
                 </div>
               </div>
 
+              {product.composition && (
+                <div className="mt-6">
+                  <div className="eyebrow text-forest-800 dark:text-honey-700 mb-2">Composition</div>
+                  <p className="text-sm leading-relaxed text-forest-900/85 dark:text-honey-700/85">{product.composition}</p>
+                </div>
+              )}
+
               {product.application && (
                 <div className="mt-6 rounded-xl p-4 bg-forest-900/4 dark:bg-honey-500/8 border border-forest-900/8 dark:border-honey-500/12">
                   <div className="eyebrow text-forest-800 dark:text-honey-700 mb-1.5">Application</div>
@@ -135,7 +142,7 @@ export default function ProductQuickView({ product, onClose, onEnquire }: Props)
                 <button
                   onClick={() => { onEnquire?.(); onClose(); }}
                   data-cursor="link"
-                  data-cursor-label="Talk to nutritionist"
+                  data-cursor-label="Enquire"
                   className="btn-primary flex-1 group"
                 >
                   Get a quote

@@ -8,23 +8,23 @@ import ScienceFlow from './ScienceFlow';
 const PILLARS = [
   {
     icon: FlaskConical,
-    title: 'Wet chemistry lab',
-    body: 'In-house assays for vitamin A, D3, E titre and chelated mineral content on every production batch.',
+    title: 'Calibrated laboratories',
+    body: 'Our manufacturing facilities include well-calibrated laboratories, run by professionals.',
   },
   {
     icon: Microscope,
-    title: 'Microbiology suite',
-    body: 'Total plate count, Salmonella, E. coli, and yeast/mould monitoring before any SKU is released.',
+    title: 'IPQC and HPLC',
+    body: 'In-process quality control (IPQC) during manufacture, and product tested by HPLC analysis.',
   },
   {
     icon: BarChart3,
-    title: 'Field trials',
-    body: 'Live broiler and layer trial sheds where formulations are validated against breed standards.',
+    title: 'Top-tier ingredients',
+    body: 'Vitamins, amino acids and ingredients from global top-3 vendors with 5-star ratings.',
   },
   {
     icon: ShieldCheck,
-    title: 'Mycotoxin lab',
-    body: 'HPLC-grade aflatoxin, ochratoxin, zearalenone, and DON quantification in 18-hour turnaround.',
+    title: 'Hi Quality System',
+    body: 'A homogeneous premix of trusted, stable vitamin sources: reliable, safe and traceable.',
   },
 ];
 
@@ -33,6 +33,7 @@ export default function RnD() {
   const inView = useInView(ref, { once: true, amount: 0.15 });
   const { theme } = useTheme();
   const isSurprise = theme === 'surprise';
+  const { isColour, art } = useTheme();
 
   const barRef = useRef<HTMLDivElement>(null);
   const barInView = useInView(barRef, { once: true, amount: 0.15 });
@@ -50,23 +51,10 @@ export default function RnD() {
         aria-hidden
       >
         <img
-          src="/Hivetz_Colour_3.png"
+          key={theme}
+          src={art('/Hivetz_Colour_3.webp', '/Bag_Green.webp', '/Bag_Blue.webp')}
           alt=""
-          className={`${isSurprise ? 'block' : 'hidden'} select-none opacity-80`}
-          style={{ width: '100%', maxWidth: '1750px', height: 'auto' }}
-          draggable={false}
-        />
-        <img
-          src="/Bag_Green.png"
-          alt=""
-          className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} select-none opacity-80`}
-         style={{ width: '100%', maxWidth: '1750px', height: 'auto' }}
-          draggable={false}
-        />
-        <img
-          src="/Bag_Blue.png"
-          alt=""
-          className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} select-none opacity-80`}
+          className={`select-none opacity-80`}
           style={{ width: '100%', maxWidth: '1750px', height: 'auto' }}
           draggable={false}
         />
@@ -86,7 +74,7 @@ export default function RnD() {
           className="max-w-2xl mb-14"
         >
           <div className={`eyebrow mb-3 ${isSurprise ? '!text-[#D4845A]' : 'text-forest-800 dark:text-honey-300/70'}`}>
-            R&D Centre · Sri Lanka
+            Quality · Our own laboratories
           </div>
           <h2 className={`display-h text-4xl md:text-6xl ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-600'}`}>
             THE SCIENCE
@@ -94,9 +82,9 @@ export default function RnD() {
             BEHIND THE BAG.
           </h2>
           <p className={`mt-6 ${isSurprise ? 'text-[#5C2D0A]/75' : 'text-forest-900/75 dark:text-honey-700/80'}`}>
-            A 4,000 sq.ft. dedicated R&D centre with HPLC, AAS, ELISA and live
-            trial sheds. Every formulation we ship has been validated three
-            ways: bench, batch, and bird.
+            Premix of trusted, stable vitamin sources, processed through the
+            Hi Quality System for assured quality and performance, with
+            reliability, safety and traceability.
           </p>
         </motion.div>
 
@@ -153,9 +141,9 @@ export default function RnD() {
                        }`}
           >
             <div>
-              <div className="eyebrow opacity-70 mb-2">Average turnaround</div>
+              <div className="eyebrow opacity-70 mb-2">Value addition</div>
               <div className="font-display text-3xl md:text-5xl font-black">
-                18 hours · sample to certificate of analysis
+                Analytical services for our customers
               </div>
             </div>
             <a
@@ -164,7 +152,7 @@ export default function RnD() {
                          bg-cream-50 text-forest-900 dark:bg-cream-50 dark:text-honey-300
                          font-semibold hover:scale-[1.02] transition"
             >
-              Submit a sample
+              Ask about analysis
             </a>
           </motion.div>
         </div>

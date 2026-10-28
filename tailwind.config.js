@@ -11,19 +11,11 @@ export default {
       },
       colors: {
         // ── LIGHT MODE accent: original olive/forest green ─────────────
-        forest: {
-          50:  '#F0FDF4',
-          100: '#DCFCE7',
-          200: '#BBF7D0',
-          300: '#86EFAC',
-          400: '#4ADE80',
-          500: '#22C55E',
-          600: '#16A34A',
-          700: '#15803D',
-          800: '#166534',
-          900: '#14532D',
-          950: '#0A2818',
-        },
+        // Read from CSS variables (src/index.css) so the Hivetz theme can remap the whole
+        // light-mode palette to the logo's colours without touching any component markup.
+        forest: Object.fromEntries(
+          [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950].map((k) => [k, `rgb(var(--forest-${k}) / <alpha-value>)`]),
+        ),
 
         // ── DARK MODE accent: vivid blue (same blue as your reference) ─
         // Used in dark: variants via honey-* class names
@@ -40,11 +32,18 @@ export default {
           900: '#142A75',
         },
 
-        // ── shared surfaces ────────────────────────────────────────────
-        cream: {
-          50:  '#FDFBF5',
-          100: '#FAF5E8',
-          200: '#F3EBD0',
+        // ── shared surfaces (CSS variables too, see index.css) ─────────
+        cream: Object.fromEntries([50, 100, 200].map((k) => [k, `rgb(var(--cream-${k}) / <alpha-value>)`])),
+
+        // ── Hivetz logo colours (sampled from the logo artwork) ───────
+        logo: {
+          orange:  '#F49B0F',
+          sky:     '#80C7DD',
+          magenta: '#D9258B',
+          purple:  '#641BA2',
+          green:   '#6DCE6B',
+          red:     '#E6413A',
+          blue:    '#005698',
         },
 
         // ── dark mode BG: same cream as light (NOT navy) ───────────────

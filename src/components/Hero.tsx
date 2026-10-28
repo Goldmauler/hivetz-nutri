@@ -1,34 +1,37 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { Box, ChevronDown } from 'lucide-react';
+import { PLANT_URL } from '../data/links';
 import { useTheme } from '../hooks/useTheme';
 import HoneycombCanvas from './HoneycombCanvas';
 import SplitText from './SplitText';
 import Marquee from './Marquee';
 import MagneticWrap from './MagneticWrap';
 
-const STATS: Array<{ raw: number; display: string; label: string }> = [
-  { raw: 25000, display: '25,000', label: 'TPA capacity' },
-  { raw: 50000, display: '50,000', label: 'TPA scaling' },
-  { raw: 12,    display: '12',     label: 'Product families' },
-  { raw: 400,   display: '400',    label: 'Active customers' },
+// Figures from the Hivetz brochure ("About Hivetz", "Why Hivetz"); operational date from florabiochem.com.
+const STATS: Array<{ raw: number; display: string; label: string; suffix?: string }> = [
+  { raw: 20000, display: '20,000', label: 'MT capacity per annum' },
+  { raw: 2,     display: '2',      label: 'Plants · India & Sri Lanka' },
+  { raw: 25,    display: '25',     label: 'Years of promoter experience', suffix: '+' },
+  { raw: 2019,  display: '2019',   label: 'Fully operational since' },
 ];
 
 const TRUST_BADGES = [
-  'GMP+ B2 CERTIFIED',
-  'FAMI-QS COMPLIANT',
-  '25,000 TPA FACILITY',
-  '400+ FARMS SERVED',
-  'IN-HOUSE R&D LAB',
-  'HPLC · AAS · ELISA',
-  '12 PRODUCT FAMILIES',
-  'MADE IN SRI LANKA',
+  'HIQUALITY · HIGAIN · HIVALUE',
+  'TESTED BY HPLC',
+  'IN-PROCESS QUALITY CONTROL',
+  '20,000 MT PER ANNUM',
+  'PLANTS IN INDIA & SRI LANKA (BOI)',
+  'GLOBAL TOP-3 VENDORS',
+  'COST-PLUS OR MARKET PRICING',
+  'NDA ON REQUEST',
 ];
 
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
   const { theme } = useTheme();
   const isSurprise = theme === 'surprise';
+  const { isColour, art } = useTheme();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
 
   const yBg     = useTransform(scrollYProgress, [0, 1], ['0%', '24%']);
@@ -53,25 +56,10 @@ export default function Hero() {
         aria-hidden
       >
         <motion.img
-          src="/Hivetz_colour_1.png"
+          key={theme}
+          src={art('/Hivetz_colour_1.webp', '/hivetz_light_background.webp', '/hivetz_dark_background.webp')}
           alt=""
-          className={`${isSurprise ? 'block' : 'hidden'} absolute inset-0 h-full w-full object-cover object-center select-none`}
-          draggable={false}
-          animate={{ scale: [1, 1.04, 1] }}
-          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.img
-          src="/hivetz_light_background.png"
-          alt=""
-          className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} absolute inset-0 h-full w-full object-cover object-center select-none`}
-          draggable={false}
-          animate={{ scale: [1, 1.04, 1] }}
-          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.img
-          src="/hivetz_dark_background.png"
-          alt=""
-          className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} absolute inset-0 h-full w-full object-cover object-center select-none`}
+          className={`absolute inset-0 h-full w-full object-cover object-center select-none`}
           draggable={false}
           animate={{ scale: [1, 1.04, 1] }}
           transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
@@ -109,7 +97,7 @@ export default function Hero() {
             ${isSurprise ? 'text-[#D4845A]' : 'text-forest-800 dark:text-honey-700'}`}
         >
           <span className={`h-px w-8 ${isSurprise ? 'bg-[#D4845A]' : 'bg-forest-800 dark:bg-honey-700'}`} />
-          Made in Sri Lanka · Est. 2017
+          Flora Biochem Pvt Ltd · Coimbatore
           <span className={`h-px w-8 ${isSurprise ? 'bg-[#D4845A]' : 'bg-forest-800 dark:bg-honey-700'}`} />
         </motion.p>
 
@@ -129,7 +117,7 @@ export default function Hero() {
         <div className={`relative mt-6 h-[3px] w-full overflow-hidden rounded-full
                         ${isSurprise ? 'bg-[#D4845A]/30' : 'bg-forest-900/20 dark:bg-honey-600/40'}`}>
           <motion.div
-            className={`absolute inset-0 origin-left ${isSurprise ? 'bg-[#D4845A]' : 'bg-forest-900 dark:bg-honey-600'}`}
+            className={`hero-rule absolute inset-0 origin-left ${isSurprise ? 'bg-[#D4845A]' : 'bg-forest-900 dark:bg-honey-600'}`}
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 1.1, delay: 1.2 }}
@@ -150,9 +138,9 @@ export default function Hero() {
           className={`mx-auto mt-8 max-w-2xl text-base md:text-lg leading-relaxed
                      ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-800'}`}
         >
-          Hivetz Nutri Pvt Ltd engineers vitamin premixes, chelated minerals,
-          toxin binders and feed additives — manufactured at our 25,000 TPA
-          facility and delivered with the science your flock deserves.
+          Hivetz vitamin premixes, feed additives and farm disinfectants from
+          Flora Biochem Private Limited, made in our own plants and tested by
+          HPLC in our own laboratories.
         </motion.p>
 
         {/* CTAs (magnetic) */}
@@ -170,6 +158,12 @@ export default function Hero() {
           <MagneticWrap strength={0.2}>
             <a href="#products" className="btn-ghost" data-cursor="link" data-cursor-label="Browse">
               Explore Products
+            </a>
+          </MagneticWrap>
+          <MagneticWrap strength={0.2}>
+            <a href={PLANT_URL} className="btn-ghost btn-plant" data-cursor="link" data-cursor-label="3D tour">
+              <Box size={16} strokeWidth={2} />
+              Walk Through Our Plant
             </a>
           </MagneticWrap>
         </motion.div>
@@ -232,11 +226,11 @@ function HeroStatCell({
   isSurprise,
   delay,
 }: {
-  stat: { raw: number; display: string; label: string };
+  stat: { raw: number; display: string; label: string; suffix?: string };
   isSurprise: boolean;
   delay: number;
 }) {
-  const suffix = stat.label.includes('families') || stat.label.includes('customers') ? '+' : '';
+  const suffix = stat.suffix ?? '';
 
   return (
     <motion.div

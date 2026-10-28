@@ -63,7 +63,7 @@ export default function DemoChat() {
           className="mb-10"
         >
           <div className={`eyebrow ${eyebrowColor} mb-3`}>
-            See it in action
+            From our product brochure
           </div>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <h2 className={`display-h text-4xl md:text-6xl ${textPrimary}`}>
@@ -72,8 +72,8 @@ export default function DemoChat() {
               ANYTHING.
             </h2>
             <p className={`max-w-md text-sm leading-relaxed ${textSecondary}`}>
-              A working demo of the kind of advice our nutritionists give every
-              day. Pick a question and watch a recommendation get drafted in real time.
+              Pick a question to see the answer from the Hivetz product brochure:
+              doses, compositions and packs, as printed. For anything else, message us.
             </p>
           </div>
         </motion.div>
@@ -202,7 +202,7 @@ export default function DemoChat() {
                 <div className={`mt-5 flex items-center gap-2 px-3 py-2.5 rounded-xl border ${borderColor}`}>
                   <span className={`flex-shrink-0 ${isSurprise ? 'text-[#D4845A]' : 'text-forest-700 dark:text-honey-400'}`}>▸</span>
                   <span className={`font-mono text-xs flex-1 truncate ${isSurprise ? 'text-[#5C2D0A]/60' : 'text-forest-900/75 dark:text-honey-700/50'}`}>
-                    Type a question about premixes, FCR, mycotoxins…
+                    Next question · anything else, WhatsApp +91 89407 68881
                   </span>
                   <button
                     className={`flex-shrink-0 h-7 w-7 rounded-lg flex items-center justify-center hover:scale-105 transition

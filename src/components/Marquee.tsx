@@ -22,11 +22,11 @@ export default function Marquee({
         transition={{ duration: speed, repeat: Infinity, ease: 'linear' }}
       >
         {reel.map((it, i) => (
-          <span key={`${it}-${i}`} className="flex items-center gap-5 px-5">
+          <span key={`${it}-${i}`} className="marquee-item flex items-center gap-5 px-5">
             <span className="font-display font-bold text-[15px] md:text-[17px] tracking-[0.06em]">
               {it}
             </span>
-            <span className={`h-1.5 w-1.5 rounded-full ${dotClassName}`} />
+            <span className={`marquee-dot h-1.5 w-1.5 rounded-full ${dotClassName}`} />
           </span>
         ))}
       </motion.div>

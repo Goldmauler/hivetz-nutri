@@ -10,7 +10,14 @@ type Cell = {
   vrot: number;
   alpha: number;
   pulse: number;
+  /** index into LOGO (Hivetz theme only) */
+  hue: number;
 };
+
+// the six molecule colours of the Hivetz logo
+const LOGO: [number, number, number][] = [
+  [244, 155, 15], [128, 199, 221], [217, 37, 139], [100, 27, 162], [109, 206, 107], [230, 65, 58],
+];
 
 export default function HoneycombCanvas() {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -33,7 +40,8 @@ export default function HoneycombCanvas() {
     const color =
       theme === 'surprise' ? [245, 166, 35]   // amber
       : theme === 'dark'   ? [77, 127, 255]   // blue
-      :                      [22, 101, 52];   // forest
+      :                      [22, 101, 52];   // forest (and the Hivetz theme's fallback)
+    const molecules = theme === 'brand';
 
     const resize = () => {
       w = canvas.clientWidth;
@@ -53,11 +61,12 @@ export default function HoneycombCanvas() {
       c.vrot = (Math.random() - 0.5) * 0.004;
       c.alpha = 0.08 + Math.random() * 0.22;
       c.pulse = Math.random() * Math.PI * 2;
+      c.hue = Math.floor(Math.random() * LOGO.length);
     };
 
     const count = Math.min(48, Math.floor((w * h) / 18000));
     for (let i = 0; i < count; i++) {
-      const c: Cell = { x: 0, y: 0, vy: 0, size: 0, rot: 0, vrot: 0, alpha: 0, pulse: 0 };
+      const c: Cell = { x: 0, y: 0, vy: 0, size: 0, rot: 0, vrot: 0, alpha: 0, pulse: 0, hue: 0 };
       reset(c);
       c.y = Math.random() * h;
       cells.push(c);
@@ -96,6 +105,18 @@ export default function HoneycombCanvas() {
       ctx.restore();
     };
 
+    // Hivetz theme: the hexagons become the logo's glossy spheres, one colour each
+    const drawSphere = (cx: number, cy: number, r: number, rgb: [number, number, number], alpha: number) => {
+      const g = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.4, r * 0.1, cx, cy, r);
+      g.addColorStop(0, `rgba(255, 255, 255, ${Math.min(1, alpha * 2.2)})`);
+      g.addColorStop(0.35, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${Math.min(1, alpha * 2)})`);
+      g.addColorStop(1, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha * 0.9})`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
     let t = 0;
     const loop = () => {
       t += 0.016;
@@ -121,7 +142,8 @@ export default function HoneycombCanvas() {
         }
 
         const a = c.alpha * (0.7 + Math.sin(c.pulse) * 0.3);
-        drawHex(c.x, c.y, c.size, c.rot, a);
+        if (molecules) drawSphere(c.x, c.y, c.size * 0.6, LOGO[c.hue], a);
+        else drawHex(c.x, c.y, c.size, c.rot, a);
 
         if (c.y < -40) reset(c, false);
       }

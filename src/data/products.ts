@@ -21,6 +21,10 @@ import {
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
+// Every product, figure and benefit below is transcribed from the Hivetz "Product Information
+// Centre" brochure (Flora Biochem Private Limited). Where the brochure gives no detail for a
+// product, none is added here: the card says so and invites an enquiry instead.
+
 export type Product = {
   id: string;
   name: string;
@@ -44,275 +48,231 @@ export const productCategories = [
   'Others',
 ] as const;
 
+const PREMIX_NOTE = 'Premix is usually a gray to brown granular powder. Store in a dry place and avoid direct sunlight.';
+const ASK = 'Made in our own plant. Ask us for the composition and dose for your feed.';
+const TRADED = 'Part of the range Flora Biochem supplies to feed manufacturers. Ask us for specifications and availability.';
+
 export const products: Product[] = [
 
-  // ─── PREMIXES ────────────────────────────────────────────────────────────────
+  // ─── PREMIXES (made at our plants) ─────────────────────────────────────────
   {
     id: 'vp-broiler',
     name: 'Vitamin Premix — For Broiler',
-    brand: 'HIBRO PX+',
+    brand: 'HIBRO-PX+',
     category: 'Premixes',
-    tagline: 'Peak growth & feed conversion for commercial broilers',
-    description:
-      'High-density vitamin stack engineered for modern fast-growing broiler genetics. Optimises daily weight gain, uniformity, and FCR across starter, grower, and finisher phases.',
+    tagline: 'Ideal growth and production performance in broilers',
+    description: `Broiler vitamin premix. ${PREMIX_NOTE}`,
     icon: Sparkles,
-    highlights: ['A · D3 · E · K3', 'Full B-complex', 'Heat-stable'],
+    highlights: ['500 g per tonne of feed', 'Vit A 30 MIU · D3 12 MIU per kg'],
     benefits: [
-      'Ensures ideal broiler growth and production performance',
-      'Enhances immunity and magnificent meat yield',
-      'Delivers healthy liveability through finisher phase',
+      'Ensures broiler ideal growth and production performance.',
+      'Enhances immunity and meat yield.',
+      'Hibro Plus delivers healthy liveability.',
     ],
-    application: 'Starter / Grower / Finisher diets at recommended inclusion.',
+    composition:
+      'Per 1 kg: Vitamin A 30 MIU, D3 12 MIU, E 100 g, K3 6 g, B1 12 g, B2 16 g, B6 12 g, B12 0.06 g, pantothenic acid 32 g, niacin 100 g, folic acid 3 g, D-biotin 0.3 g.',
+    application: '500 g per tonne of feed.',
   },
   {
     id: 'vp-breeder',
     name: 'Vitamin Premix — For Breeder',
-    brand: 'HIBREED PX',
+    brand: 'HIBREED-PX',
     category: 'Premixes',
-    tagline: 'Fertility & hatchability support for breeder flocks',
-    description:
-      'Elevated Vitamin E, biotin, and folic acid to maximise fertility, embryo viability, and first-week chick quality in parent stock.',
+    tagline: 'Optimum vitamin levels for growth and reproduction',
+    description: `Breeder vitamin premix. Antioxidant, anticaking agent, binder and organic carrier added. ${PREMIX_NOTE}`,
     icon: Sparkles,
-    highlights: ['Hatchability boost', 'Elevated Vit E', 'Chick livability'],
+    highlights: ['1 kg per tonne of feed', 'With coated vitamin C'],
     benefits: [
-      'Assures optimum vitamin levels for improved growth and reproduction',
-      'Protects against vitamin deficiencies — excellent hatchability',
-      'Finest bird uniformity and egg quality',
+      'Assures optimum vitamin levels for improved growth and reproduction.',
+      'Protects against vitamin deficiencies.',
+      'Excellent hatchability.',
+      'Finest bird uniformity and egg quality.',
     ],
-    application: 'Pre-breeder through peak production.',
+    composition:
+      'Per 1 kg: Vitamin A 22.5 MIU, D3 4 MIU, E 100 g, K3 4 g, B1 4.4 g, B2 20 g, B6 6 g, B12 0.03 g, pantothenic acid 30 g, niacin 66 g, folic acid 6 g, D-biotin 0.25 g, vitamin C (coated) 100 g.',
+    application: '1 kg per tonne of feed.',
   },
   {
     id: 'vp-layer',
     name: 'Vitamin Premix — For Layer',
-    brand: 'LAY MIX PX',
+    brand: 'HILAY-PX',
     category: 'Premixes',
-    tagline: 'Sustained production & shell quality for layers',
-    description:
-      'Balanced vitamin profile supporting persistent egg production, shell strength, and yolk colour from peak production through late lay.',
+    tagline: 'Egg uniformity, consistency and production',
+    description: `Layer vitamin premix. Antioxidant, anticaking agent, binder and organic carrier added. ${PREMIX_NOTE}`,
     icon: Wheat,
-    highlights: ['Persistency', 'Shell strength', 'Yolk pigmenter'],
+    highlights: ['250 g per tonne of feed', 'Vit A 50 MIU per kg'],
     benefits: [
-      'Achieves egg uniformity and consistency',
-      'Enhances bird immunity for better productivity',
-      'Supports optimum growth and improves egg production',
+      'Achieves egg uniformity and consistency.',
+      'Enhances bird immunity for better productivity.',
+      'Supports optimum growth.',
+      'Improves egg production.',
     ],
-    application: 'In-plant premix from peak through late lay.',
+    composition:
+      'Per 1 kg: Vitamin A 50 MIU, D3 13.2 MIU, E 32 g, K3 4 g, B1 4 g, B2 20 g, B6 6 g, B12 0.064 g, pantothenic acid 32 g, niacin 48 g, folic acid 4 g, D-biotin 0.2 g.',
+    application: '250 g per tonne of feed.',
   },
   {
     id: 'vp-country',
     name: 'Vitamin Premix — For Country Bird',
     category: 'Premixes',
-    tagline: 'Robust immunity & growth for native & desi breeds',
-    description:
-      'Tailored vitamin fortification for slower-growing native and country bird strains raised in semi-intensive and backyard systems.',
+    tagline: 'Vitamin premix for country birds',
+    description: ASK,
     icon: Leaf,
-    highlights: ['Immunity focus', 'Stress tolerant', 'Low inclusion'],
+    highlights: ['Made at our plant'],
   },
   {
-    id: 'conc-premix',
+    id: 'pfp-concentrate',
     name: 'Poultry Feed Premix — Concentrate',
     category: 'Premixes',
-    tagline: 'All-in-one vitamin + mineral concentrate',
-    description:
-      'High-potency concentrate premix combining vitamins, trace minerals, and performance additives in a single inclusion point for simplified feed manufacturing.',
+    tagline: 'Poultry feed premix concentrate',
+    description: ASK,
     icon: Layers,
-    highlights: ['Vit + Min + Additive', 'Single inclusion', 'Reduces SKUs'],
+    highlights: ['Made at our plant'],
   },
   {
-    id: 'combo-premix',
+    id: 'combo-aa',
     name: 'Combo Premix — with AA 0.5%–1%',
     category: 'Premixes',
-    tagline: 'Vitamin-mineral-amino acid combo premix',
-    description:
-      'Flexible combo premix with amino acid inclusion (0.5%–1%) for integrators running multiple species or house brands. Customisable ratios on request.',
+    tagline: 'Combo premix with amino acids at 0.5% to 1%',
+    description: ASK,
     icon: FlaskConical,
-    highlights: ['With amino acids', 'Customisable', 'Cost-efficient'],
+    highlights: ['Amino acids 0.5%–1%'],
   },
   {
-    id: 'aqua-premix',
+    id: 'aqua',
     name: 'Aqua Premix',
     category: 'Premixes',
-    tagline: 'Specialised vitamin-mineral premix for aquaculture',
-    description:
-      'Water-stable vitamin and mineral premix for shrimp, fish, and other aqua species — supporting growth, immunity, and survival rates.',
+    tagline: 'Premix for aquaculture feed',
+    description: ASK,
     icon: Fish,
-    highlights: ['Water-stable', 'Shrimp & fish', 'Growth support'],
+    highlights: ['Made at our plant'],
   },
   {
-    id: 'cattle-premix',
+    id: 'cattle',
     name: 'Cattle Premix',
+    brand: 'HIVITAMIX AD3E',
     category: 'Premixes',
-    tagline: 'Complete micronutrient support for dairy & beef cattle',
-    description:
-      'Vitamin and chelated mineral premix for dairy and beef cattle, supporting milk production, reproductive performance, and hoof health.',
+    tagline: 'Vitamin A, D3 and E premix for dairy and cattle',
+    description: `Vitamin A, D3, E premix for dairy and cattle feed. ${PREMIX_NOTE}`,
     icon: Beef,
-    highlights: ['Dairy & beef', 'Chelated minerals', 'Reproduction'],
+    highlights: ['100 g per tonne of cattle feed', 'Type 1 and Type 2 feed'],
+    benefits: [
+      'Increased bioavailability of nutrients.',
+      'Disease resistance.',
+      'Overall feed efficiency.',
+      'Improved nutritional condition.',
+    ],
+    composition: 'Per 1 kg: Vitamin A 80 MIU, D3 15 MIU, E 300 g.',
+    application: '100 g per tonne of cattle feed (Type 1 and Type 2).',
   },
 
-  // ─── FEED ADDITIVES ──────────────────────────────────────────────────────────
+  // ─── FEED ADDITIVES (Hivetz brand) ────────────────────────────────────────
   {
-    id: 'hi-min-inorganic',
-    name: 'HI MIN — Trace Minerals Inorganic',
-    brand: 'HI MIN BROILER/BREEDER',
+    id: 'hi-min',
+    name: 'HI MIN — Trace Minerals',
+    brand: 'HI MIN BROILER / BREEDER',
     category: 'Feed Additives',
-    tagline: 'Sulphate-based trace mineral matrix',
-    description:
-      'Blended zinc, copper, manganese, iron, iodine, and selenium sulphates providing cost-effective mineral fortification for standard commercial diets.',
+    tagline: 'Trace minerals, inorganic and organic',
+    description: 'Hivetz trace-mineral additive for broiler and breeder feed, in inorganic and organic forms. Ask us for the specification.',
     icon: Beaker,
-    highlights: ['Zn · Cu · Mn · Fe', 'Sulphate form', 'Cost-effective'],
-  },
-  {
-    id: 'hi-min-organic',
-    name: 'HI MIN — Trace Minerals Organic',
-    brand: 'HI MIN BROILER/BREEDER',
-    category: 'Feed Additives',
-    tagline: 'Chelated trace minerals for superior bioavailability',
-    description:
-      'Amino-acid chelated zinc, copper, manganese, and selenium for superior gut absorption, skeletal integrity, eggshell thickness, and reproductive performance.',
-    icon: Microscope,
-    highlights: ['Glycine chelates', 'Higher bioavailability', 'Low inclusion'],
+    highlights: ['Inorganic and organic', 'Broiler / breeder'],
   },
   {
     id: 'hi-bind',
     name: 'HI BIND — Toxin Binder',
     brand: 'HI BIND',
     category: 'Feed Additives',
-    tagline: 'Broad-spectrum mycotoxin binder',
-    description:
-      'Activated bentonite, yeast cell-wall mannan, and montmorillonite working together to adsorb aflatoxin, ochratoxin, zearalenone, and DON without binding nutrients.',
+    tagline: 'Toxin binder',
+    description: 'Hivetz toxin binder for feed. Ask us for the specification and inclusion rate.',
     icon: Shield,
-    highlights: ['Multi-mycotoxin', 'pH-stable', 'No nutrient loss'],
+    highlights: ['Toxin binder'],
   },
   {
     id: 'hi-dol',
     name: 'HI DOL PLUS / HI DOL X — Emulsifiers',
     brand: 'HI DOL PLUS / HI DOL X',
     category: 'Feed Additives',
-    tagline: 'Lysolecithin-based fat emulsification',
-    description:
-      'Enzymatic lysolecithin blend (HI DOL PLUS / HI DOL X) that improves fat digestibility in high-energy diets, enables fat reduction, and lowers feed cost per kg of gain.',
+    tagline: 'Emulsifiers',
+    description: 'Hivetz emulsifiers for feed. Ask us for the specification and inclusion rate.',
     icon: Droplets,
-    highlights: ['Lysolecithin', '+Energy recovery', 'Cost reduction'],
+    highlights: ['Emulsifier'],
   },
   {
     id: 'oxivet',
     name: 'OXIVET — Antioxidants',
     brand: 'OXIVET',
     category: 'Feed Additives',
-    tagline: 'Feed-grade antioxidant preservation system',
-    description:
-      'OXIVET protects fat, fat-soluble vitamins, and feed pellets from oxidative rancidity during storage, extending shelf life and preserving nutritional value.',
+    tagline: 'Antioxidants',
+    description: 'Hivetz antioxidant for feed. Ask us for the specification and inclusion rate.',
     icon: Flame,
-    highlights: ['Natural tocopherols', 'BHA/BHT free option', 'Extended shelf life'],
+    highlights: ['Antioxidant'],
   },
   {
-    id: 'hi-chol-plus',
+    id: 'hi-chol',
     name: 'HI CHOL PLUS — Herbal Choline',
     brand: 'HI CHOL PLUS',
     category: 'Feed Additives',
-    tagline: 'Herbal choline for liver function & fat metabolism',
-    description:
-      'Plant-derived herbal choline formulation supporting liver detoxification, fat metabolism, and methyl group transfer. A natural alternative to synthetic choline chloride.',
+    tagline: 'Herbal choline',
+    description: 'Hivetz herbal choline. Ask us for the specification and inclusion rate.',
     icon: HeartPulse,
-    highlights: ['Herbal source', 'Liver detox', 'Fat metabolism'],
+    highlights: ['Herbal choline'],
   },
   {
     id: 'hi-phersel',
     name: 'HI PHERSEL — Vitamin E with Selenium',
     brand: 'HI PHERSEL',
     category: 'Feed Additives',
-    tagline: 'Antioxidant duo for immunity & reproduction',
-    description:
-      'HI PHERSEL combines Vitamin E and selenium for synergistic antioxidant protection — essential for breeder fertility, immune response, and heat-stress management.',
+    tagline: 'Vitamin E with selenium',
+    description: 'Hivetz vitamin E with selenium. Ask us for the specification and inclusion rate.',
     icon: Pill,
-    highlights: ['Vit E + Se', 'Breeder fertility', 'Heat stress'],
+    highlights: ['Vitamin E + selenium'],
   },
   {
     id: 'bestaci',
     name: 'BESTACI — Acidifier',
     brand: 'BESTACI',
     category: 'Feed Additives',
-    tagline: 'Organic acid blend for gut health & pathogen control',
-    description:
-      'BESTACI is a balanced blend of formic, propionic, and butyric acids for pH reduction in feed and water, controlling Salmonella, E. coli, and improving gut integrity.',
+    tagline: 'Acidifier',
+    description: 'Hivetz acidifier. Ask us for the specification and inclusion rate.',
     icon: TestTube,
-    highlights: ['Organic acids', 'Salmonella control', 'Gut pH'],
+    highlights: ['Acidifier'],
   },
 
-  // ─── ANTI COCCIDIAL ──────────────────────────────────────────────────────────
-  {
-    id: 'maduram-nicarb',
-    name: 'Maduramycin (0.75%) + Nicarbazine (8%)',
-    category: 'Anti Coccidial',
-    tagline: 'Dual-action ionophore + chemical combination',
-    description:
-      'Synergistic combination of maduramycin ammonium and nicarbazine for broad-spectrum coccidiosis control with reduced resistance risk in broiler programmes.',
-    icon: Bug,
-    highlights: ['Broad spectrum', 'Shuttle-ready', 'Reduced resistance'],
-  },
-  {
-    id: 'monens-nicarb',
-    name: 'Monensin Sodium (8%) + Nicarbazine (8%)',
-    category: 'Anti Coccidial',
-    tagline: 'Ionophore-chemical combination for robust protection',
-    description:
-      'Monensin sodium paired with nicarbazine for enhanced coccidiosis efficacy, particularly effective against E. tenella and E. acervulina in broiler grower diets.',
-    icon: ShieldCheck,
-    highlights: ['E. tenella · E. acervulina', 'Grower phase', 'Combination'],
-  },
-  {
-    id: 'diclazuril',
-    name: 'Diclazuril 0.5%',
-    category: 'Anti Coccidial',
-    tagline: 'Triazine-based chemical coccidiostat',
-    description:
-      'Low-inclusion triazinone coccidiostat with activity across all pathogenic Eimeria species. Suitable for finisher and withdrawal-friendly programmes.',
-    icon: Zap,
-    highlights: ['0.5% active', 'All Eimeria spp.', 'Low inclusion'],
-  },
-  {
-    id: 'salinomycin',
-    name: 'Salinomycin 12%',
-    category: 'Anti Coccidial',
-    tagline: 'Ionophore coccidiostat for broilers',
-    description:
-      'Salinomycin 12% is a naturally derived ionophore antibiotic providing effective control of Eimeria species in broiler starter and grower phases.',
-    icon: Bug,
-    highlights: ['12% active', 'Ionophore', 'Starter/grower'],
-  },
-  {
-    id: 'amprolium',
-    name: 'Amprolium 0.75%',
-    category: 'Anti Coccidial',
-    tagline: 'Thiamine analogue coccidiostat',
-    description:
-      'Amprolium 0.75% acts as a competitive thiamine antagonist, inhibiting Eimeria development. Safe for use close to slaughter with low withdrawal period.',
-    icon: ShieldCheck,
-    highlights: ['0.75% active', 'Low withdrawal', 'Safe near slaughter'],
-  },
+  // ─── ANTICOCCIDIALS (traded) ───────────────────────────────────────────────
+  { id: 'madu-nica', name: 'Maduramycin (0.75%) + Nicarbazin (8%)', category: 'Anti Coccidial', tagline: 'Anticoccidial premix', description: TRADED, icon: Bug, highlights: ['Maduramycin 0.75%', 'Nicarbazin 8%'] },
+  { id: 'mone-nica', name: 'Monensin Sodium (8%) + Nicarbazin (8%)', category: 'Anti Coccidial', tagline: 'Anticoccidial premix', description: TRADED, icon: Bug, highlights: ['Monensin sodium 8%', 'Nicarbazin 8%'] },
+  { id: 'diclazuril', name: 'Diclazuril 0.5%', category: 'Anti Coccidial', tagline: 'Anticoccidial', description: TRADED, icon: ShieldCheck, highlights: ['Diclazuril 0.5%'] },
+  { id: 'salinomycin', name: 'Salinomycin 12%', category: 'Anti Coccidial', tagline: 'Anticoccidial', description: TRADED, icon: Zap, highlights: ['Salinomycin 12%'] },
+  { id: 'amprolium', name: 'Amprolium 0.75%', category: 'Anti Coccidial', tagline: 'Anticoccidial', description: TRADED, icon: Bug, highlights: ['Amprolium 0.75%'] },
+  { id: 'clopidol', name: 'Clobest 25 (Clopidol 25%)', category: 'Anti Coccidial', tagline: 'Anticoccidial', description: TRADED, icon: ShieldCheck, highlights: ['Clopidol 25%'] },
+  { id: 'nicarbazin', name: 'Nicarbazin 25%', category: 'Anti Coccidial', tagline: 'Anticoccidial', description: TRADED, icon: Bug, highlights: ['Nicarbazin 25%'] },
 
-  // ─── DISINFECTANTS ───────────────────────────────────────────────────────────
+  // ─── DISINFECTANTS (Hivetz brand) ──────────────────────────────────────────
   {
-    id: 'sterivetz-plus',
-    name: 'Sterivetz Plus',
-    brand: 'Sterivetz Plus',
+    id: 'sterivetz',
+    name: 'Sterivetz +',
+    brand: 'Sterivetz +',
     category: 'Disinfectants',
-    tagline: 'Multipurpose broad-spectrum farm disinfectant',
+    tagline: 'Multipurpose broad-spectrum disinfectant',
     description:
-      'A powerful bactericidal, virucidal, and antifungal disinfectant designed for comprehensive farm and poultry sanitation. Effectively eliminates all major poultry pathogens, ensuring superior biosecurity and disease control.',
+      'A bactericidal, virucidal and antifungal disinfectant for comprehensive farm and poultry sanitation. It eliminates all major poultry pathogens for superior biosecurity and disease control.',
     icon: ShieldCheck,
-    highlights: ['Bactericidal', 'Virucidal', 'Antifungal'],
+    highlights: ['1 Ltr · 5 Ltr', 'Bactericidal · virucidal · antifungal'],
+    composition:
+      'Didecyl dimethyl ammonium chloride 9.2% w/v; alkyl (C12-61%, C14-23%, C16-11%) dimethyl benzyl ammonium chloride 9.2% w/v; alkyl (C12-40%, C14-50%, C16-10%) dimethyl benzyl ammonium chloride 4.6% v/v; bis-n-tributyltin oxide 1.0% v/v.',
   },
   {
-    id: 'steriox',
+    id: 'sterioxx',
     name: 'SteriOx',
     brand: 'SteriOx',
     category: 'Disinfectants',
-    tagline: 'Ultimate high-level oxidising disinfectant',
+    tagline: 'Ultimate high-level disinfectant',
     description:
-      'SteriOx destroys harmful microorganisms by oxidising sulfur bonds in proteins and enzymes, disrupting cellular functions and causing rupture of the microbial cell membrane. Extremely effective against bacteria, viruses, fungi, and spores.',
+      'Destroys microorganisms by oxidizing sulfur bonds in proteins and enzymes, disrupting cellular function and rupturing the cell membrane. Effective against bacteria, viruses, fungi and spores in high-risk environments.',
     icon: Flame,
-    highlights: ['Oxidising action', 'Spore-active', 'High-risk environments'],
+    highlights: ['500 g · 1 Kg', 'Bacteria · viruses · fungi · spores'],
+    composition:
+      'Potassium monopersulphate compound (triple salt) 49.8% w/w; sodium chloride 1.5% w/w; inert ingredients Q.S.',
   },
   {
     id: 'gludac',
@@ -321,72 +281,29 @@ export const products: Product[] = [
     category: 'Disinfectants',
     tagline: 'High-level synergistic broad-spectrum disinfectant',
     description:
-      'Gludac delivers strong multi-action protection with biocidal, fungicidal, virucidal, sporicidal, mycobactericidal, and yeasticidal activity. Formulated for environments requiring maximum hygiene and rapid microbial kill across a wide spectrum.',
+      'Multi-action protection: biocidal, fungicidal, virucidal, sporicidal, mycobactericidal and yeasticidal activity, for environments that need maximum hygiene and rapid microbial kill.',
     icon: Shield,
-    highlights: ['Sporicidal', 'Mycobactericidal', 'Rapid kill'],
+    highlights: ['1 Ltr · 5 Ltr', 'Glutaraldehyde + quats'],
+    composition:
+      'Didecyl dimethyl ammonium chloride 7.80% w/w; alkyl dimethyl benzyl ammonium chlorides I.P. 10.00% v/v and 7.06% v/v; strong glutaraldehyde solution 10.73% v/v; inert ingredients Q.S.',
   },
   {
     id: 'merisan',
-    name: 'Merisan DS / Marisan Extra',
-    brand: 'Merisan DS',
+    name: 'Merisan Extra',
+    brand: 'Merisan Extra',
     category: 'Disinfectants',
-    tagline: 'Dual-strength farm sanitation disinfectant',
-    description:
-      'Merisan DS and Marisan Extra provide reliable broad-spectrum sanitation for poultry houses, hatcheries, and farm equipment between flocks.',
+    tagline: 'Aldehyde-based surface and environmental disinfectant',
+    description: 'Excellent cleansing property and a broad spectrum of germicidal action.',
     icon: Shield,
-    highlights: ['Two strengths', 'Farm & hatchery', 'Between flocks'],
+    highlights: ['500 ml · 1 Ltr · 5 Ltr', 'Aldehyde-based'],
+    composition:
+      'Each 100 g contains: (ethylenedioxy) dimethanol 14.1 g; didecyldimethyl ammonium chloride 16.0 g; glutaraldehyde 5.0 g; specialized inbuilt cleansers and corrosion inhibitors.',
   },
 
-  // ─── OTHERS ──────────────────────────────────────────────────────────────────
-  {
-    id: 'probiotics',
-    name: 'Probiotics — Life Gus',
-    brand: 'Life Gus',
-    category: 'Others',
-    tagline: 'Live multi-strain probiotic for gut health',
-    description:
-      'Life Gus is a multi-strain Bacillus and Lactobacillus probiotic for microflora balance, necrotic enteritis control, and improved feed conversion in broilers and layers.',
-    icon: Sprout,
-    highlights: ['10⁹ CFU/g', 'Multi-strain', 'Spore-forming'],
-  },
-  {
-    id: 'phytase',
-    name: 'Phytase — Thermostable & Non-thermostable',
-    category: 'Others',
-    tagline: 'Phosphorus-releasing enzyme for feed cost reduction',
-    description:
-      'Available in thermostable and non-thermostable forms. Breaks down phytic acid in plant-based feeds, releasing phosphorus and reducing inorganic phosphate supplementation costs.',
-    icon: FlaskConical,
-    highlights: ['Thermo & non-thermo', 'P-release', 'Cost saving'],
-  },
-  {
-    id: 'csb',
-    name: 'Feed Grade Sodium Butyrate 90% Coated',
-    category: 'Others',
-    tagline: 'Slow-release butyrate for gut integrity',
-    description:
-      'Micro-encapsulated sodium butyrate at 90% for targeted delivery to the lower intestine — supporting villi development, tight-junction integrity, and Salmonella control.',
-    icon: Layers,
-    highlights: ['90% coated', 'Enteric release', 'Villi development'],
-  },
-  {
-    id: 'acidifier-eo',
-    name: 'Acidifier with Essential Oil',
-    category: 'Others',
-    tagline: 'Synergistic acid-phytogenic blend',
-    description:
-      'Combination of organic acids with essential oils (thymol, carvacrol, cinnamaldehyde) for enhanced antimicrobial activity, gut integrity, and palatability improvement.',
-    icon: Droplets,
-    highlights: ['Acids + essential oils', 'AGP-free', 'Gut integrity'],
-  },
-  {
-    id: 'cyromycin',
-    name: 'Cyromycin 2% Px (Cyromax)',
-    category: 'Others',
-    tagline: 'Flavophospholipol growth promotor',
-    description:
-      'Cyromycin (Cyromax) 2% provides flavophospholipol-based growth promotion, improving feed efficiency and weight gain in broiler and swine diets.',
-    icon: Zap,
-    highlights: ['Flavophospholipol', 'Growth promotion', 'Feed efficiency'],
-  },
+  // ─── OTHERS (traded) ───────────────────────────────────────────────────────
+  { id: 'life-gus', name: 'Probiotics — Life Gus', brand: 'Life Gus', category: 'Others', tagline: 'Probiotics', description: TRADED, icon: Sprout, highlights: ['Probiotic'] },
+  { id: 'phytase', name: 'Phytase — Thermostable & Non-thermostable', category: 'Others', tagline: 'Feed enzyme', description: TRADED, icon: FlaskConical, highlights: ['Thermostable', 'Non-thermostable'] },
+  { id: 'butyrate', name: 'Sodium Butyrate 90% Coated', category: 'Others', tagline: 'Feed grade, coated', description: TRADED, icon: Layers, highlights: ['90% coated'] },
+  { id: 'acid-eo', name: 'Acidifier with Essential Oil', category: 'Others', tagline: 'Acidifier with essential oil', description: TRADED, icon: Droplets, highlights: ['With essential oil'] },
+  { id: 'cyromax', name: 'Cyromycin 2% PX (Cyromax)', brand: 'Cyromax', category: 'Others', tagline: 'Cyromycin 2% PX', description: TRADED, icon: Microscope, highlights: ['Cyromycin 2%'] },
 ];

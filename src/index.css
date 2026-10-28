@@ -9,6 +9,27 @@
    Surprise: warm amber/terracotta palette
 ───────────────────────────────────────────────────────────────────────── */
 @layer base {
+  /* Palette channels behind the forest-* and cream-* utilities (tailwind.config.js).
+     Light, Dark and Surprise use the original values; the Hivetz theme remaps them. */
+  :root {
+    --forest-50: 240 253 244;  --forest-100: 220 252 231; --forest-200: 187 247 208;
+    --forest-300: 134 239 172; --forest-400: 74 222 128;  --forest-500: 34 197 94;
+    --forest-600: 22 163 74;   --forest-700: 21 128 61;   --forest-800: 22 101 52;
+    --forest-900: 20 83 45;    --forest-950: 10 40 24;
+    --cream-50: 253 251 245;   --cream-100: 250 245 232;  --cream-200: 243 235 208;
+  }
+
+  /* HIVETZ — the main theme, in the logo's own colours: the wordmark blue (#005698) carries
+     the text and buttons, the big orange sphere (#F49B0F) the accents, and the six molecule
+     colours appear together as the brand gradient. Warm cream ground, as on the brochure. */
+  html.brand {
+    --forest-50: 242 249 253;  --forest-100: 229 243 250; --forest-200: 204 233 245;
+    --forest-300: 168 218 236; --forest-400: 128 199 221; --forest-500: 59 155 216;
+    --forest-600: 28 127 198;  --forest-700: 10 103 176;  --forest-800: 0 86 152;
+    --forest-900: 8 58 110;    --forest-950: 4 30 58;
+    --cream-50: 253 246 234;   --cream-100: 250 236 214;  --cream-200: 243 222 186;
+  }
+
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
@@ -318,6 +339,68 @@
 .surprise #contact h2,
 .surprise .testimonials-section h2 { color: #5C2D0A; }
 
+/* ──────────────────────────────────────────────────────────────────────────
+   HIVETZ THEME OVERRIDES
+   Components render their light-mode markup in this theme; the palette variables above turn
+   the greens into the logo blues. What is left here are the hard-coded green tints and the
+   places where the logo's orange and its six-colour molecule gradient come in.
+   Logo: orange #F49B0F · sky #80C7DD · magenta #D9258B · purple #641BA2 ·
+         green #6DCE6B · red #E6413A · wordmark blue #005698
+────────────────────────────────────────────────────────────────────────── */
+.logo-gradient {
+  background-image: linear-gradient(90deg, #80C7DD, #005698 22%, #641BA2 40%, #D9258B 56%, #E6413A 72%, #F49B0F 86%, #6DCE6B);
+}
+
+.brand ::selection { background: #F49B0F; color: #fff; }
+
+html.brand ::-webkit-scrollbar-thumb { background: #005698; border-radius: 9999px; }
+html.brand ::-webkit-scrollbar-thumb:hover { background: #F49B0F; }
+html.brand ::-webkit-scrollbar-track { background: rgb(250, 236, 214); }
+
+.brand .eyebrow { color: #C76A00; }
+
+.brand .glass {
+  box-shadow: 0 8px 40px -12px rgba(0, 86, 152, 0.20);
+}
+.brand .terminal {
+  background: linear-gradient(180deg, rgba(0,86,152,0.04) 0%, rgba(128,199,221,0.12) 100%);
+}
+.brand .terminal-highlight {
+  background: linear-gradient(90deg, rgba(244,155,15,0.24) 0%, rgba(244,155,15,0.06) 100%);
+}
+.brand .grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(0,86,152,0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,86,152,0.06) 1px, transparent 1px);
+}
+
+/* primary buttons: wordmark blue, warming to the logo orange on hover */
+.brand .btn-primary:hover {
+  background: #F49B0F;
+  color: #fff;
+  box-shadow: 0 10px 30px -10px rgba(244,155,15,0.65);
+}
+.brand .btn-ghost:hover {
+  border-color: rgba(244,155,15,0.6);
+  background: rgba(244,155,15,0.08);
+}
+
+/* the hero rule and the marquee dots pick up the molecule colours */
+.brand .hero-rule { background-image: linear-gradient(90deg, #80C7DD, #005698 22%, #641BA2 40%, #D9258B 56%, #E6413A 72%, #F49B0F 86%, #6DCE6B); }
+.brand .marquee-dot { opacity: 1 !important; }
+.brand .marquee-item:nth-child(6n+1) .marquee-dot { background: #F49B0F; }
+.brand .marquee-item:nth-child(6n+2) .marquee-dot { background: #80C7DD; }
+.brand .marquee-item:nth-child(6n+3) .marquee-dot { background: #D9258B; }
+.brand .marquee-item:nth-child(6n+4) .marquee-dot { background: #641BA2; }
+.brand .marquee-item:nth-child(6n+5) .marquee-dot { background: #6DCE6B; }
+.brand .marquee-item:nth-child(6n+6) .marquee-dot { background: #E6413A; }
+
+/* colour illustrations sit on the cream ground without a visible box edge */
+.brand .art-fade {
+  -webkit-mask-image: radial-gradient(ellipse 72% 78% at 50% 50%, #000 62%, transparent 100%);
+          mask-image: radial-gradient(ellipse 72% 78% at 50% 50%, #000 62%, transparent 100%);
+}
+
 /* blinking cursor */
 .caret::after     { content: '▍'; margin-left: 2px; animation: blink 1s step-end infinite; }
 .caret-off::after { content: ''; }
@@ -334,3 +417,11 @@ html.surprise ::-webkit-scrollbar-thumb {
 html.surprise ::-webkit-scrollbar-track {
   background: rgb(252, 237, 214);
 }
+
+/* the "Our Plant" links: the molecule colours cycle through the dot in the Hivetz theme */
+@keyframes plant-dot {
+  0%, 100% { background: #F49B0F; } 17% { background: #E6413A; } 33% { background: #D9258B; }
+  50% { background: #641BA2; } 67% { background: #005698; } 83% { background: #6DCE6B; }
+}
+.brand .plant-dot { animation: plant-dot 6s linear infinite; }
+.brand .btn-plant { border-color: rgba(244,155,15,0.55); }

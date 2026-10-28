@@ -47,10 +47,9 @@ function HeroSection({ isSurprise }: { isSurprise: boolean }) {
           </h1>
           <p className={`mt-6 mx-auto max-w-2xl leading-relaxed
             ${isSurprise ? 'text-[#5C2D0A]/80' : 'text-forest-900/80 dark:text-honey-700/80'}`}>
-            Hivetz Nutri was built by practitioners, not investors. Each
-            founder brings deep domain expertise from formulation, operations,
-            field sales, and R&D — all pointed at one goal: better nutrition
-            for every flock in Sri Lanka.
+            Flora Biochem Private Limited, the company behind Hivetz, is led by
+            its founders. Our vision: we deliver HiQuality, HiGain and HiValue
+            to our customers.
           </p>
         </motion.div>
       </div>

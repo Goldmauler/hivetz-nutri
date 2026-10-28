@@ -1,16 +1,32 @@
 import { createContext, useCallback, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
-export type Theme = 'light' | 'dark' | 'surprise';
+/** 'brand' is the main Hivetz theme (logo colours); light, dark and surprise are kept as options. */
+export type Theme = 'brand' | 'light' | 'dark' | 'surprise';
 
-const STORAGE_KEY = 'hivetz-theme';
+export const THEMES: Theme[] = ['brand', 'light', 'dark', 'surprise'];
+
+// v3: the Hivetz theme became the default, so earlier saved choices start over on it once
+const STORAGE_KEY = 'hivetz-theme-v3';
+
+/** Only a theme the visitor picked is remembered; the default is never written. */
+function remember(t: Theme) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, t);
+  } catch {
+    /* not persisted; the theme still applies for this visit */
+  }
+}
 
 function getInitialTheme(): Theme {
-  if (typeof window === 'undefined') return 'light';
-  const stored = window.localStorage.getItem(STORAGE_KEY) as Theme | null;
-  if (stored === 'light' || stored === 'dark' || stored === 'surprise') return stored;
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  return prefersDark ? 'dark' : 'light';
+  if (typeof window === 'undefined') return 'brand';
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY) as Theme | null;
+    if (stored && THEMES.includes(stored)) return stored;
+  } catch {
+    /* storage blocked: fall through to the default */
+  }
+  return 'brand';
 }
 
 interface ThemeContextValue {
@@ -26,28 +42,29 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const setTheme = useCallback((t: Theme) => {
     setThemeState(t);
+    remember(t);
   }, []);
 
+  // cycles the three everyday themes (surprise has its own button)
   const toggle = useCallback(() => {
-    setThemeState((t) => (t === 'light' ? 'dark' : 'light'));
+    setThemeState((t) => {
+      const next: Theme = t === 'brand' ? 'light' : t === 'light' ? 'dark' : 'brand';
+      remember(next);
+      return next;
+    });
   }, []);
 
   useEffect(() => {
     const root = document.documentElement;
     const body = document.body;
 
-    root.classList.remove('dark', 'surprise');
-    body.classList.remove('dark', 'surprise');
+    root.classList.remove('dark', 'surprise', 'brand');
+    body.classList.remove('dark', 'surprise', 'brand');
 
-    if (theme === 'dark') {
-      root.classList.add('dark');
-      body.classList.add('dark');
-    } else if (theme === 'surprise') {
-      root.classList.add('surprise');
-      body.classList.add('surprise');
+    if (theme !== 'light') {
+      root.classList.add(theme);
+      body.classList.add(theme);
     }
-
-    window.localStorage.setItem(STORAGE_KEY, theme);
   }, [theme]);
 
   return (

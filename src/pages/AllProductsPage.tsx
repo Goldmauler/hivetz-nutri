@@ -245,7 +245,7 @@ function ProductCard({
         borderColor: 'rgba(139,69,19,0.12)',
       } : {
         background: 'rgba(255,255,255,0.70)',
-        borderColor: 'rgba(20,83,45,0.08)',
+        borderColor: 'rgb(var(--forest-900)/0.08)',
       }}
     >
       <div className="flex items-start justify-between">

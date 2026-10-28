@@ -7,7 +7,7 @@ export default function SurpriseButton() {
   const isSurprise = theme === 'surprise';
 
   const handleClick = () => {
-    setTheme(isSurprise ? 'light' : 'surprise');
+    setTheme(isSurprise ? 'brand' : 'surprise');
   };
 
   return (

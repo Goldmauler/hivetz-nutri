@@ -21,6 +21,7 @@ export default function PageTransition() {
   const accent =
     theme === 'surprise' ? '#8B4513' :
     theme === 'dark'     ? '#142A75' :
+    theme === 'brand'    ? '#005698' :
                            '#14532D';
 
   return (

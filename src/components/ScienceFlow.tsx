@@ -3,11 +3,11 @@ import { useRef } from 'react';
 import { FlaskConical, Microscope, Beaker, TestTube, FileCheck } from 'lucide-react';
 
 const STEPS = [
-  { icon: FlaskConical, label: 'SAMPLE',  sub: 'Intake & ID'      },
-  { icon: Beaker,       label: 'PREP',    sub: 'Wet chemistry'    },
-  { icon: Microscope,   label: 'HPLC',    sub: 'Vitamin titre'    },
-  { icon: TestTube,     label: 'AAS',     sub: 'Mineral assay'    },
-  { icon: FileCheck,    label: 'CoA',     sub: '18hr turnaround'  },
+  { icon: FlaskConical, label: 'SOURCE',   sub: 'Global top-3 vendors' },
+  { icon: Beaker,       label: 'BLEND',    sub: 'Hi Quality System'    },
+  { icon: Microscope,   label: 'IPQC',     sub: 'In-process control'   },
+  { icon: TestTube,     label: 'HPLC',     sub: 'Product tested'       },
+  { icon: FileCheck,    label: 'DISPATCH', sub: 'Traceable batches'    },
 ];
 
 export default function ScienceFlow({ isSurprise }: { isSurprise: boolean }) {
@@ -21,7 +21,7 @@ export default function ScienceFlow({ isSurprise }: { isSurprise: boolean }) {
   return (
     <div ref={ref} className="mt-14 mb-2">
       <div className={`eyebrow mb-5 ${isSurprise ? '!text-[#D4845A]' : 'text-forest-800 dark:text-honey-300/70'}`}>
-        The validation pipeline
+        The Hi Quality System
       </div>
 
       {/* Desktop: horizontal flow */}
@@ -83,7 +83,7 @@ export default function ScienceFlow({ isSurprise }: { isSurprise: boolean }) {
                     }`}
                   style={{ boxShadow: isSurprise
                     ? '0 8px 20px -8px rgba(139,69,19,0.45)'
-                    : '0 8px 20px -8px rgba(20,83,45,0.45)' }}
+                    : '0 8px 20px -8px rgb(var(--forest-900)/0.45)' }}
                 >
                   <Icon size={20} />
                 </motion.div>

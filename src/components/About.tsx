@@ -1,20 +1,22 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Factory, Microscope, Globe2, Award } from 'lucide-react';
+import { ArrowUpRight, Factory, Microscope, Globe2, Award } from 'lucide-react';
+import { PLANT_URL } from '../data/links';
 import { useTheme } from '../hooks/useTheme';
 import { useCountUp } from '../hooks/useCountUp';
 import { useParallax } from '../hooks/useParallax';
 
+// Sources: Hivetz brochure ("About Hivetz", "Why Hivetz") and the florabiochem.com about page.
 const STATS = [
-  { value: 25000, suffix: ' TPA', label: 'Current capacity', icon: Factory },
-  { value: 50000, suffix: ' TPA', label: 'Scaling to', icon: Globe2 },
-  { value: 12, suffix: '+', label: 'Product families', icon: Award },
-  { value: 18, suffix: ' yrs', label: 'Combined R&D', icon: Microscope },
+  { value: 20000, suffix: ' MT', label: 'Capacity per annum', icon: Factory },
+  { value: 2, suffix: '', label: 'Plants · India & Sri Lanka (BOI)', icon: Globe2 },
+  { value: 25, suffix: '+ yrs', label: 'Promoter experience', icon: Award },
+  { value: 8, suffix: '', label: 'Premix families we make', icon: Microscope },
 ];
 
 const PARAGRAPHS = [
-  'Hivetz Nutri Pvt Ltd is a science-first animal nutrition company. Every premix that leaves our facility is formulated by in-house PhDs, manufactured on automated micro-dosing lines, and batch-tested for vitamin titre, mineral assay, and microbial load.',
-  "We started with a single mixer and an obsession with consistency. Today we serve 400+ farms across Sri Lanka with a 25,000 TPA facility — and we're scaling to 50,000 TPA by 2027 without compromising the chemistry.",
+  'Flora Biochem Private Limited makes Hivetz premixes, ingredients and formulations in its own manufacturing units, with its own laboratory and formulation centre. We work with international raw-material suppliers and with feed manufacturers, so customers get one partner from import to dispatch.',
+  'Our Sri Lanka plant (BOI) supplies South Asia, Africa and the Middle East efficiently. Formulations, batches, sources and prices stay confidential, we sign long-term NDAs, and you choose a cost-plus or a market-price model.',
 ];
 
 export default function About() {
@@ -22,6 +24,7 @@ export default function About() {
   const inView = useInView(ref, { once: true, amount: 0.15 });
   const { theme } = useTheme();
   const isSurprise = theme === 'surprise';
+  const { isColour, art } = useTheme();
 
   return (
     <section
@@ -36,21 +39,10 @@ export default function About() {
         aria-hidden
       >
         <img
-          src="/Hivetz_Colour_Site.png"
+          key={theme}
+          src={art('/Hivetz_Colour_Site.webp', '/Sectionbackgroud_light.webp', '/Sectionbackgroud_Dark.webp')}
           alt=""
-          className={`${isSurprise ? 'block' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center select-none`}
-          draggable={false}
-        />
-        <img
-          src="/Sectionbackgroud_light.png"
-          alt=""
-          className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center select-none`}
-          draggable={false}
-        />
-        <img
-          src="/Sectionbackgroud_Dark.png"
-          alt=""
-          className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} absolute inset-0 w-full h-full object-cover object-center select-none opacity-70`}
+          className={`absolute inset-0 w-full h-full object-cover object-center select-none ${theme === 'dark' ? 'opacity-70' : ''}`}
           draggable={false}
         />
       </motion.div>
@@ -64,7 +56,7 @@ export default function About() {
           {/* ── Left text block ── */}
           <div>
             <div className={`eyebrow mb-3 ${isSurprise ? '!text-[#D4845A]' : 'text-forest-800 dark:text-honey-300/70'}`}>
-              About Hivetz Nutri
+              About Hivetz
             </div>
 
             {/* Headline slides from left */}
@@ -74,12 +66,12 @@ export default function About() {
               transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
               className={`display-h text-4xl md:text-6xl ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-600'}`}
             >
-              BUILT BY
+              ONE PARTNER,
               <br />
-              NUTRITIONISTS,
+              FROM IMPORT
               <br />
               <span className={isSurprise ? 'text-[#8B4513]' : 'text-forest-700 dark:text-honey-400'}>
-                NOT TRADERS.
+                TO DISPATCH.
               </span>
             </motion.h2>
 
@@ -104,8 +96,9 @@ export default function About() {
               className="mt-10 flex flex-wrap gap-3"
             >
               {[
-                'GMP+ B2',
-                'FAMI-QS',
+                'Tested by HPLC',
+                'IPQC',
+                'NDA on request',
               ].map((b) => (
                 <span
                   key={b}
@@ -120,6 +113,19 @@ export default function About() {
                 </span>
               ))}
             </motion.div>
+
+            <motion.a
+              href={PLANT_URL}
+              initial={{ opacity: 0, y: 16 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.9 }}
+              className="btn-primary mt-8"
+              data-cursor="link"
+              data-cursor-label="3D tour"
+            >
+              Take a look at our plant
+              <ArrowUpRight size={16} strokeWidth={2.2} />
+            </motion.a>
           </div>
 
           {/* ── Right stats grid ── */}

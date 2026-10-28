@@ -11,96 +11,66 @@ export type ChatScript = {
   steps: ChatStep[];
 };
 
+// Every answer is quoted from the Hivetz "Product Information Centre" brochure: doses,
+// compositions and pack sizes as printed. No farm data or dosing advice beyond the label.
 export const chatScripts: ChatScript[] = [
   {
-    id: 'mycotoxin',
-    title: 'How do we tackle aflatoxin in our broiler feed this monsoon?',
+    id: 'broiler-dose',
+    title: 'What is the dose of HIBRO-PX+ for broilers?',
     steps: [
-      {
-        role: 'user',
-        content: 'How do we tackle aflatoxin in our broiler feed this monsoon?',
-      },
+      { role: 'user', content: 'What is the dose of HIBRO-PX+ for broilers?' },
+      { role: 'agent', meta: 'lookup "HIBRO-PX+"', content: 'Broiler vitamin premix · 500 g per tonne of feed.', delay: 700 },
       {
         role: 'agent',
-        meta: 'analyze_feed_batch "kharif-2026"',
-        content: 'Detected aflatoxin B1 at 78 ppb in 3 of 12 sampled lots — above the safe threshold.',
-        delay: 800,
-      },
-      {
-        role: 'agent',
-        meta: 'recommend',
+        meta: 'composition per kg',
         content:
-          'Include HI BIND at 1.5 kg/ton for the next 21 days. HI BIND\'s activated bentonite + yeast cell-wall matrix adsorbs aflatoxin, ochratoxin, and ZEA without binding vitamins. Pair with HI CHOL PLUS at 500 g/ton to support liver recovery.',
-        delay: 1200,
-      },
-    ],
-  },
-  {
-    id: 'fcr',
-    title: 'My broiler FCR is stuck at 1.72 — what should I change?',
-    steps: [
-      {
-        role: 'user',
-        content: 'My broiler FCR is stuck at 1.72 — what should I change?',
-      },
-      {
-        role: 'agent',
-        meta: 'review_diet_matrix',
-        content: 'Energy density is ~60 kcal below breed standard. Fat digestibility likely the bottleneck.',
-        delay: 700,
-      },
-      {
-        role: 'agent',
-        meta: 'recommend',
-        content:
-          'Add HI DOL PLUS emulsifier at 500 g/ton to unlock fat energy. Also consider BESTACI acidifier to improve gut pH and nutrient absorption. Target FCR under 1.58 by day 35.',
+          'Vitamin A 30 MIU, D3 12 MIU, E 100 g, K3 6 g, B1 12 g, B2 16 g, B6 12 g, B12 0.06 g, pantothenic acid 32 g, niacin 100 g, folic acid 3 g, D-biotin 0.3 g. It supports ideal growth and production performance, immunity, meat yield and liveability.',
         delay: 1100,
       },
     ],
   },
   {
-    id: 'cocci',
-    title: 'Need a coccidiosis programme for broiler grower phase.',
+    id: 'layer',
+    title: 'Which premix do you make for layers?',
     steps: [
-      {
-        role: 'user',
-        content: 'Need a coccidiosis programme for broiler grower phase.',
-      },
+      { role: 'user', content: 'Which premix do you make for layers?' },
+      { role: 'agent', meta: 'lookup "HILAY-PX"', content: 'HILAY-PX, our layer vitamin premix · 250 g per tonne of feed.', delay: 700 },
       {
         role: 'agent',
-        meta: 'design_program',
-        content: 'Building rotation-friendly programme for grower phase (day 15–35).',
-        delay: 800,
-      },
-      {
-        role: 'agent',
-        meta: 'recommend',
+        meta: 'benefits',
         content:
-          'Use Monensin Sodium (8%) + Nicarbazine (8%) for grower phase — strong against E. tenella and E. acervulina. Rotate to Diclazuril 0.5% in finisher to prevent resistance buildup. Zero withdrawal concern with this rotation.',
-        delay: 1200,
+          'Egg uniformity and consistency, better immunity for better productivity, optimum growth and improved egg production. Antioxidant, anticaking agent, binder and organic carrier are added.',
+        delay: 1100,
       },
     ],
   },
   {
-    id: 'biosecurity',
-    title: 'What disinfectant programme do you recommend between flocks?',
+    id: 'breeder',
+    title: 'What does HIBREED-PX do for breeder flocks?',
     steps: [
-      {
-        role: 'user',
-        content: 'What disinfectant programme do you recommend between flocks?',
-      },
+      { role: 'user', content: 'What does HIBREED-PX do for breeder flocks?' },
+      { role: 'agent', meta: 'lookup "HIBREED-PX"', content: 'Breeder vitamin premix · 1 kg per tonne of feed, with coated vitamin C.', delay: 700 },
       {
         role: 'agent',
-        meta: 'review_biosecurity_protocol',
-        content: 'Designing a 3-stage terminal disinfection programme.',
-        delay: 700,
-      },
-      {
-        role: 'agent',
-        meta: 'recommend',
+        meta: 'benefits',
         content:
-          'Stage 1: Wash down with Sterivetz Plus (broad-spectrum bactericidal + virucidal). Stage 2: Fogging with SteriOx for spore and fungal control. Stage 3: Final spray with Gludac for maximum sporicidal and mycobactericidal assurance before placement.',
-        delay: 1200,
+          'Optimum vitamin levels for improved growth and reproduction, protection against vitamin deficiencies, excellent hatchability, and the finest bird uniformity and egg quality.',
+        delay: 1100,
+      },
+    ],
+  },
+  {
+    id: 'disinfectant',
+    title: 'Which Hivetz disinfectant is for high-risk areas?',
+    steps: [
+      { role: 'user', content: 'Which Hivetz disinfectant is for high-risk areas?' },
+      { role: 'agent', meta: 'lookup "SteriOx"', content: 'SteriOx, our ultimate high-level disinfectant · 500 g and 1 Kg packs.', delay: 700 },
+      {
+        role: 'agent',
+        meta: 'how it works',
+        content:
+          'It destroys microorganisms by oxidizing sulfur bonds in proteins and enzymes, and is effective against bacteria, viruses, fungi and spores. For everyday farm sanitation there is Sterivetz +; Gludac and Merisan Extra complete the range.',
+        delay: 1100,
       },
     ],
   },

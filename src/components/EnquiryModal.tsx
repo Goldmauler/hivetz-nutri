@@ -41,10 +41,22 @@ export default function EnquiryModal({ open, onClose }: Props) {
       toast.error('Please add at least your name and phone');
       return;
     }
+    // No server behind this site: the enquiry is handed to WhatsApp, addressed to our sales line,
+    // so it only goes out when the visitor presses send there.
+    const text = [
+      'Hivetz enquiry',
+      `Name: ${form.name}`,
+      form.company && `Company / farm: ${form.company}`,
+      `Phone: ${form.phone}`,
+      `Species: ${form.species}`,
+      form.message && `Need: ${form.message}`,
+    ]
+      .filter(Boolean)
+      .join('\n');
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 900));
+    window.open(`https://wa.me/918940768881?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
     setSubmitting(false);
-    toast.success('Enquiry received. A nutritionist will call within 24 hrs.');
+    toast.success('Your enquiry is ready in WhatsApp. Press send there.');
     setForm({ name: '', company: '', phone: '', species: 'Broiler', message: '' });
     onClose();
   };

@@ -1,10 +1,11 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Box, Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 import SurpriseButton from './SurpriseButton';
 import { useTheme } from '../hooks/useTheme';
+import { PLANT_URL } from '../data/links';
 
 const NAV = [
   { label: 'Home',     href: '/',         hash: ''        },
@@ -32,6 +33,7 @@ export default function Header({ onEnquire }: Props) {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const isSurprise = theme === 'surprise';
+  const { isColour, art } = useTheme();
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 20);
@@ -82,33 +84,18 @@ export default function Header({ onEnquire }: Props) {
 
       <div className="relative container-x">
         {/* Mobile: 2-col (logo | hamburger), Desktop: 3-col (logo | nav | actions) */}
-        <div className="flex items-center justify-between lg:grid lg:grid-cols-3 lg:items-center h-[72px] md:h-[90px] lg:h-[116px]">
+        <div className="flex items-center justify-between lg:grid lg:grid-cols-[auto_1fr_auto] lg:gap-4 lg:items-center h-[72px] md:h-[90px] lg:h-[116px]">
 
           {/* ── Col 1: Logo ── */}
           <div className="flex items-center justify-start">
             <a href="/" className="flex-shrink-0">
               <motion.img
-                src="/Hivetz_Logo.png"
-                alt="Hivetz Nutri"
+                key={theme}
+                src={art('/Hivetz_Logo.webp', '/HivetzLogoLight.webp', '/HivetzLogoDark.webp')}
+                alt="Hivetz"
                 whileHover={{ scale: 1.03 }}
                 transition={{ type: 'spring', stiffness: 400 }}
-                className={`${isSurprise ? 'block' : 'hidden'} h-[100px] md:h-[130px] w-auto select-none`}
-                draggable={false}
-              />
-              <motion.img
-                src="/HivetzLogoLight.png"
-                alt="Hivetz Nutri"
-                whileHover={{ scale: 1.03 }}
-                transition={{ type: 'spring', stiffness: 400 }}
-                className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} h-[150px] md:h-[145px] w-auto select-none`}
-                draggable={false}
-              />
-              <motion.img
-                src="/HivetzLogoDark.png"
-                alt="Hivetz Nutri"
-                whileHover={{ scale: 1.03 }}
-                transition={{ type: 'spring', stiffness: 400 }}
-                className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} h-[96px] md:h-[145px] w-auto select-none`}
+                className={`block w-auto select-none ${isColour ? 'h-[100px] md:h-[130px]' : theme === 'dark' ? 'h-[96px] md:h-[145px]' : 'h-[150px] md:h-[145px]'}`}
                 draggable={false}
               />
             </a>
@@ -147,6 +134,25 @@ export default function Header({ onEnquire }: Props) {
                 </motion.span>
               );
             })}
+            <motion.span
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.08 + NAV.length * 0.05 }}
+            >
+              <a
+                href={PLANT_URL}
+                data-cursor="link"
+                data-cursor-label="3D tour"
+                className={`ml-1 inline-flex items-center gap-1.5 whitespace-nowrap px-4 py-2 rounded-full border transition-colors
+                  ${isSurprise
+                    ? 'border-[#8B4513]/30 text-[#8B4513] hover:bg-[#F5A623]/15'
+                    : 'border-forest-900/20 text-forest-900 hover:bg-forest-900/5 dark:border-honey-500/30 dark:text-honey-700 dark:hover:bg-honey-500/10'
+                  }`}
+              >
+                <span className="plant-dot h-1.5 w-1.5 rounded-full bg-current" />
+                Our Plant
+              </a>
+            </motion.span>
           </nav>
 
           {/* ── Col 3: Actions ── */}
@@ -230,6 +236,18 @@ export default function Header({ onEnquire }: Props) {
                 </Link>
               );
             })}
+
+            <a
+              href={PLANT_URL}
+              className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold
+                          tracking-wide uppercase transition-colors
+                          ${isSurprise
+                            ? 'text-[#5C2D0A] hover:bg-[#8B4513]/8'
+                            : 'text-forest-900 dark:text-honey-700 hover:bg-forest-900/5 dark:hover:bg-honey-500/10'
+                          }`}
+            >
+              <Box size={16} strokeWidth={2} /> Our Plant · 3D tour
+            </a>
 
             {/* Divider */}
             <div className={`h-px mx-4 my-2 ${isSurprise ? 'bg-[#8B4513]/12' : 'bg-forest-900/8'}`} />

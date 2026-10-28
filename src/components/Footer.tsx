@@ -1,7 +1,7 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { Linkedin, Mail, Twitter, ArrowRight, Github } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { Linkedin, Mail, MapPin, Phone } from 'lucide-react';
+import { PLANT_URL } from '../data/links';
 
 const LINKS = {
   Products: [
@@ -16,14 +16,13 @@ const LINKS = {
     { label: 'R&D Lab',              href: '#rnd' },
     { label: 'Technical Support',    href: '#contact' },
     { label: 'Sample Request',       href: '#contact' },
-    { label: 'Quality Policy',       href: '#' },
+    { label: 'Quality',              href: '#rnd' },
   ],
   Company: [
     { label: 'About Us',             href: '#about' },
+    { label: 'Our Plant · 3D tour',  href: PLANT_URL },
     { label: 'Contact',              href: '#contact' },
-    { label: 'Careers',              href: '#' },
-    { label: 'Privacy Policy',       href: '#' },
-    { label: 'Terms of Use',         href: '#' },
+    { label: 'Founders',             href: '/founders' },
   ],
 };
 
@@ -33,8 +32,6 @@ const STROKE_LEN = 4200;
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
   const wordRef   = useRef<HTMLDivElement>(null);
-  const [email, setEmail]     = useState('');
-  const [sending, setSending] = useState(false);
 
   /* slide-up when footer enters viewport */
   const inView = useInView(footerRef, { once: true, amount: 0.05 });
@@ -49,15 +46,6 @@ export default function Footer() {
   });
   const wordY = useTransform(scrollYProgress, [0, 1], ['4%', '-4%']);
 
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    setSending(true);
-    await new Promise(r => setTimeout(r, 800));
-    setSending(false);
-    toast.success("Subscribed! We'll be in touch.");
-    setEmail('');
-  };
 
   return (
     <motion.footer
@@ -110,46 +98,18 @@ export default function Footer() {
             className="col-span-2 md:col-span-1"
           >
             <h4 className="eyebrow text-forest-900/80 dark:text-[#1a3490] mb-5">
-              Stay Updated
+              Get in touch
             </h4>
-            <p className="text-sm text-forest-900 dark:text-[#1a3490] leading-relaxed mb-4">
-              Nutrition insights, product launches and technical updates.
-            </p>
-            <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                className="w-full px-4 py-2.5 rounded-lg text-sm
-                           bg-white border border-forest-900/15 dark:border-[#1a3490]/25
-                           text-forest-900 dark:text-[#1a3490]
-                           placeholder:text-forest-900/35 dark:placeholder:text-honey-700/35
-                           focus:outline-none focus:border-forest-700 dark:focus:border-honey-500
-                           transition-colors"
-              />
-              <motion.button
-                type="submit"
-                disabled={sending}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                className="flex items-center justify-center gap-2 px-4 py-2.5
-                           rounded-lg text-sm font-semibold
-                           bg-forest-900 text-cream-50
-                           dark:bg-[#1a3490] dark:text-white
-                           hover:bg-forest-800 dark:hover:bg-[#142A75]
-                           transition-colors disabled:opacity-60"
-              >
-                {sending ? 'Subscribing…' : <> Subscribe <ArrowRight size={14} /></>}
-              </motion.button>
-            </form>
+            <ul className="space-y-3 text-sm text-forest-900 dark:text-[#1a3490] leading-relaxed">
+              <li className="flex gap-2"><Phone size={15} className="mt-0.5 shrink-0" /><a href="tel:+918940768881" className="underline-anim">+91 89407 68881</a></li>
+              <li className="flex gap-2"><Mail size={15} className="mt-0.5 shrink-0" /><a href="mailto:info@florabiochem.com" className="underline-anim">info@florabiochem.com</a></li>
+              <li className="flex gap-2"><MapPin size={15} className="mt-0.5 shrink-0" /><span>B-103, Orbit 11, Akshaya 1432 Trichy Road, Coimbatore 641 018</span></li>
+            </ul>
 
             <div className="mt-6 flex items-center gap-3
                             text-forest-900/80 dark:text-[#1a3490]">
               {[
                 { Icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/company/hivetz/posts/?feedView=all' },
-                { Icon: Twitter,  label: 'Twitter',  href: '#' },
-                { Icon: Github,   label: 'GitHub',   href: '#' },
                 { Icon: Mail,     label: 'Email',    href: 'mailto:info@florabiochem.com' },
               ].map(({ Icon, label, href }) => (
                 <a key={label} href={href} aria-label={label}
@@ -176,10 +136,13 @@ export default function Footer() {
                    justify-between gap-3
                    text-xs text-forest-900/80 dark:text-[#1a3490]"
       >
-        <span>© {new Date().getFullYear()} Hivetz Nutri Pvt Ltd. All rights reserved.</span>
+        <span>© {new Date().getFullYear()} Flora Biochem Private Limited. Hivetz is our brand.</span>
         <div className="flex items-center gap-5">
-          {['Privacy', 'Terms', 'Quality Policy'].map(l => (
-            <a key={l} href="#"
+          {[
+            { l: 'Our plant · 3D tour', href: PLANT_URL },
+            { l: 'LinkedIn', href: 'https://www.linkedin.com/company/hivetz/' },
+          ].map(({ l, href }) => (
+            <a key={l} href={href}
                className="hover:text-forest-900 dark:hover:text-[#142A75] transition-colors">
               {l}
             </a>
@@ -216,7 +179,7 @@ export default function Footer() {
               }
               transition={{ duration: 2.2, ease: 'easeInOut', delay: 0.1 }}
             >
-              HIVETZ NUTRI
+              HIVETZ
             </motion.text>
           </svg>
         </motion.div>

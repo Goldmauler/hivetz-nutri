@@ -1,51 +1,57 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { Moon, Sun } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useTheme } from '../hooks/useTheme';
+import type { Theme } from '../hooks/useTheme';
+
+// The three everyday themes as swatches. Hivetz (the main theme) shows the logo's molecules.
+const OPTIONS: { id: Theme; label: string; swatch: string }[] = [
+  {
+    id: 'brand',
+    label: 'Hivetz colours',
+    swatch: 'conic-gradient(from 200deg, #F49B0F, #E6413A, #D9258B, #641BA2, #005698, #80C7DD, #6DCE6B, #F49B0F)',
+  },
+  { id: 'light', label: 'Green', swatch: 'radial-gradient(circle at 35% 30%, #4ADE80, #166534 70%)' },
+  { id: 'dark', label: 'Blue', swatch: 'radial-gradient(circle at 35% 30%, #99B6FF, #2A4FD8 70%)' },
+];
 
 export default function ThemeToggle() {
-  const { theme, toggle } = useTheme();
-  // Show "dark" state when theme is dark; otherwise show "light" state
-  const isDark = theme === 'dark';
+  const { theme, setTheme } = useTheme();
 
   return (
-    <button
-      onClick={toggle}
-      aria-label="Toggle theme"
-      className="relative inline-flex h-7 w-14 items-center rounded-full
-                 bg-forest-800 dark:bg-honey-600 surprise:bg-[#8B4513]
-                 transition-colors duration-500
-                 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1
-                 focus-visible:ring-forest-600 dark:focus-visible:ring-honey-400"
+    <div
+      role="radiogroup"
+      aria-label="Theme"
+      className="relative inline-flex items-center gap-1 rounded-full p-1
+                 bg-forest-900/8 dark:bg-honey-500/12 border border-forest-900/10 dark:border-honey-500/20"
     >
-      <motion.span
-        layout
-        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-        className={`absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-md
-                    flex items-center justify-center
-                    ${isDark ? 'right-0.5' : 'left-0.5'}`}
-      >
-        <AnimatePresence mode="wait" initial={false}>
-          {isDark ? (
-            <motion.span key="moon"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0,   opacity: 1 }}
-              exit={{    rotate:  90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="text-honey-600">
-              <Moon size={13} strokeWidth={2.5} />
-            </motion.span>
-          ) : (
-            <motion.span key="sun"
-              initial={{ rotate: 90,  opacity: 0 }}
-              animate={{ rotate: 0,   opacity: 1 }}
-              exit={{    rotate: -90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="text-forest-800">
-              <Sun size={13} strokeWidth={2.5} />
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </motion.span>
-    </button>
+      {OPTIONS.map((o) => {
+        const active = theme === o.id;
+        return (
+          <button
+            key={o.id}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            aria-label={o.label}
+            title={o.label}
+            onClick={() => setTheme(o.id)}
+            className="relative h-6 w-6 rounded-full focus:outline-none focus-visible:ring-2
+                       focus-visible:ring-forest-600 dark:focus-visible:ring-honey-400"
+          >
+            {active && (
+              <motion.span
+                layoutId="theme-ring"
+                transition={{ type: 'spring', stiffness: 500, damping: 32 }}
+                className="absolute -inset-[3px] rounded-full bg-white shadow-md"
+              />
+            )}
+            <motion.span
+              whileHover={{ scale: 1.12 }}
+              className="absolute inset-[3px] rounded-full"
+              style={{ background: o.swatch }}
+            />
+          </button>
+        );
+      })}
+    </div>
   );
 }

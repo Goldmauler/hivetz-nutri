@@ -18,7 +18,7 @@ type Card = {
 const CARDS: Card[] = [
   {
     step: '1. CALL',
-    title: 'Talk to a nutrition specialist',
+    title: 'Talk to our team',
     command: 'hivetz call --line=sales',
     display: '+91 89 407 68881',
     icon: Phone,
@@ -43,6 +43,7 @@ export default function GetStarted() {
   const inView = useInView(ref, { once: true, amount: 0.15 });
   const { theme } = useTheme();
   const isSurprise = theme === 'surprise';
+  const { isColour, art } = useTheme();
   const [revealed, setRevealed] = useState(false);
 
   return (
@@ -52,7 +53,7 @@ export default function GetStarted() {
       className="relative border-t border-forest-900/10 dark:border-honey-400/10 overflow-hidden"
       style={{
         minHeight: revealed ? '70vh' : '520px',
-        ...(isSurprise && !revealed ? { backgroundColor: 'rgba(252, 237, 214, 1)' } : {}),
+        ...(isColour && !revealed ? { backgroundColor: 'rgba(252, 237, 214, 1)' } : {}),
       }}
     >
       {/* ── Surprise_cick reveal image ── */}
@@ -60,7 +61,7 @@ export default function GetStarted() {
         {revealed && (
           <motion.img
             key="surprise-reveal"
-            src="/Surprise_cick.png"
+            src="/Surprise_cick.webp"
             alt=""
             aria-hidden
             initial={{ opacity: 0, scale: 1.06 }}
@@ -86,28 +87,17 @@ export default function GetStarted() {
           >
             <motion.div style={{ y: bgY }} className="absolute inset-[-6%]">
               <img
-                src="/Hivetz_chick.png"
+          key={theme}
+                src={art('/Hivetz_chick.webp', '/EGG_Light.webp', '/EGG_Dark.webp')}
                 alt=""
-                className={`${isSurprise ? 'block' : 'hidden'} absolute inset-0 w-full h-full object-contain object-center select-none`}
-                draggable={false}
-              />
-              <img
-                src="/EGG_Light.png"
-                alt=""
-                className={`${!isSurprise ? 'block dark:hidden' : 'hidden'} absolute inset-0 w-full h-full object-contain object-center select-none`}
-                draggable={false}
-              />
-              <img
-                src="/EGG_Dark.png"
-                alt=""
-                className={`${!isSurprise ? 'hidden dark:block' : 'hidden'} absolute inset-0 w-full h-full object-contain object-center select-none`}
+                className={`art-fade absolute inset-0 w-full h-full object-contain object-center select-none`}
                 draggable={false}
               />
             </motion.div>
             {/* Edge vignette */}
             <div
               className="absolute inset-0"
-              style={isSurprise
+              style={isColour
                 ? { background: 'linear-gradient(to right, rgba(252,237,214,0.65) 0%, transparent 30%, transparent 70%, rgba(252,237,214,0.65) 100%)' }
                 : { background: 'linear-gradient(to right, rgba(253,251,245,0.6) 0%, transparent 30%, transparent 70%, rgba(253,251,245,0.6) 100%)' }
               }
@@ -155,14 +145,14 @@ export default function GetStarted() {
               className="text-center mb-14"
             >
               <div className={`eyebrow mb-4 ${isSurprise ? '!text-[#D4845A]' : 'text-forest-800 dark:text-honey-300/70'}`}>
-                Open Conversations · Island-wide Delivery
+                Open conversations · Coimbatore, India
               </div>
               <h2 className={`display-h text-4xl md:text-6xl ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-600'}`}>
                 GET STARTED.
               </h2>
               <p className={`mt-5 max-w-xl mx-auto ${isSurprise ? 'text-[#5C2D0A]' : 'text-forest-900 dark:text-honey-700/75'}`}>
-                Two ways to start a conversation. Pick one. We'll route you to the
-                right nutritionist within an hour.
+                Two ways to start a conversation. Pick one and tell us about
+                your flock and your feed.
               </p>
 
               {/* Reveal button */}

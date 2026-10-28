@@ -28,7 +28,7 @@ const CONTACT = [
     icon: MapPin,
     label: 'Head Office',
     value: 'B-103, Orbit 11, Akshaya 1432 Trichy Road, Coimbatore – 641 018',
-    copy: 'Hivetz Nutri India Pvt Ltd, B-103, Orbit 11, Akshaya 1432 Trichy Road, Coimbatore - 641018',
+    copy: 'Flora Biochem Private Limited, B-103, Orbit 11, Akshaya 1432 Trichy Road, Coimbatore - 641018',
   },
   {
     icon: MapPin,
@@ -89,9 +89,8 @@ export default function Contact({ onEnquire }: Props) {
             </h2>
 
             <p className="mt-6 max-w-md text-forest-900/75 dark:text-honey-700/80 break-words">
-              Tell us your bird type, current FCR, and the challenge you're
-              facing. A nutritionist will reply with a custom plan within 24
-              hours.
+              Tell us your bird type, your feed and what you need. The enquiry
+              opens in WhatsApp, ready to send to our team.
             </p>
 
             <button

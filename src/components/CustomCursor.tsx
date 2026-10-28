@@ -94,6 +94,7 @@ export default function CustomCursor() {
   const color =
     theme === 'surprise' ? '#8B4513'
     : theme === 'dark'   ? '#2A4FD8'
+    : theme === 'brand'  ? '#005698'
     :                      '#14532D';
 
   const ringSize =

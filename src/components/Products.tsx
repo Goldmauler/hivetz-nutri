@@ -126,7 +126,7 @@ export default function Products({ onEnquire }: Props) {
                        text-sm font-semibold
                        hover:bg-forest-800 dark:hover:bg-honey-500
                        transition-all duration-300 hover:-translate-y-0.5
-                       hover:shadow-[0_10px_30px_-10px_rgba(20,83,45,0.45)]"
+                       hover:shadow-[0_10px_30px_-10px_rgb(var(--forest-900)/0.45)]"
           >
             View All {products.length} Products
             <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
@@ -174,7 +174,7 @@ function ProductCard({
         className="group relative rounded-xl
                    bg-white/70 dark:bg-white/60
                    border border-forest-900/8 dark:border-honey-500/15
-                   shadow-sm hover:shadow-[0_12px_30px_-12px_rgba(20,83,45,0.25)]
+                   shadow-sm hover:shadow-[0_12px_30px_-12px_rgb(var(--forest-900)/0.25)]
                    p-4 flex flex-col gap-3
                    transition-shadow duration-300 product-card cursor-pointer
                    h-full"
