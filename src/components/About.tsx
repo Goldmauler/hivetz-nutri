@@ -9,14 +9,14 @@ import { useParallax } from '../hooks/useParallax';
 // Sources: Hivetz brochure ("About Hivetz", "Why Hivetz") and the florabiochem.com about page.
 const STATS = [
   { value: 20000, suffix: ' MT', label: 'Capacity per annum', icon: Factory },
-  { value: 2, suffix: '', label: 'Plants · India & Sri Lanka (BOI)', icon: Globe2 },
+  { value: 4, suffix: '', label: 'Hivetz farm disinfectants', icon: Globe2 },
   { value: 25, suffix: '+ yrs', label: 'Promoter experience', icon: Award },
   { value: 8, suffix: '', label: 'Premix families we make', icon: Microscope },
 ];
 
 const PARAGRAPHS = [
   'Flora Biochem Private Limited makes Hivetz premixes, ingredients and formulations in its own manufacturing units, with its own laboratory and formulation centre. We work with international raw-material suppliers and with feed manufacturers, so customers get one partner from import to dispatch.',
-  'Our Sri Lanka plant (BOI) supplies South Asia, Africa and the Middle East efficiently. Formulations, batches, sources and prices stay confidential, we sign long-term NDAs, and you choose a cost-plus or a market-price model.',
+  'Imports, manufacturing and exports are handled end to end by one team. Formulations, batches, sources and prices stay confidential, we sign long-term NDAs, and you choose a cost-plus or a market-price model.',
 ];
 
 export default function About() {

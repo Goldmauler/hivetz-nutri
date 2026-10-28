@@ -11,7 +11,7 @@ import MagneticWrap from './MagneticWrap';
 // Figures from the Hivetz brochure ("About Hivetz", "Why Hivetz"); operational date from florabiochem.com.
 const STATS: Array<{ raw: number; display: string; label: string; suffix?: string }> = [
   { raw: 20000, display: '20,000', label: 'MT capacity per annum' },
-  { raw: 2,     display: '2',      label: 'Plants · India & Sri Lanka' },
+  { raw: 8,     display: '8',      label: 'Premix families we make' },
   { raw: 25,    display: '25',     label: 'Years of promoter experience', suffix: '+' },
   { raw: 2019,  display: '2019',   label: 'Fully operational since' },
 ];
@@ -21,7 +21,7 @@ const TRUST_BADGES = [
   'TESTED BY HPLC',
   'IN-PROCESS QUALITY CONTROL',
   '20,000 MT PER ANNUM',
-  'PLANTS IN INDIA & SRI LANKA (BOI)',
+  'OUR OWN PLANT IN TAMIL NADU',
   'GLOBAL TOP-3 VENDORS',
   'COST-PLUS OR MARKET PRICING',
   'NDA ON REQUEST',
