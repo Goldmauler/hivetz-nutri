@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useTheme } from './hooks/useTheme';
 import { useState } from 'react';
@@ -83,6 +83,8 @@ export default function App() {
       <Routes>
         <Route path="/"           element={<HomePage />} />
         <Route path="/products"   element={<AllProductsPage />} />
+        {/* old links (e.g. the removed /founders page) land on the home page */}
+        <Route path="*"           element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );
