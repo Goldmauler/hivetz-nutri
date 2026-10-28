@@ -80,17 +80,31 @@ hivetz/
 - **R&D** section with 4 pillars (wet chem, microbiology, field trials, mycotoxin lab)
 - **Testimonials carousel** with auto-rotation, dots, and manual nav
 - **Contact** section with copy-to-clipboard contact details
-- **Quick Enquiry modal** with species selector, validation, and toast on submit
-- **Footer** with sitemap, socials, and policies
-- **Light & dark themes** with persistence; smooth transitions on every surface
+- **Quick Enquiry modal**: species selector and validation; the enquiry opens in WhatsApp, addressed to the sales line, ready to send
+- **Footer** with sitemap, contact details and a link to the 3D plant tour
+- **Four themes**: Hivetz (default, the logo's colours), Green, Blue and Surprise; a chosen theme is remembered
 - **Fully responsive** — single-column on mobile, 2-column tablet, 3-column desktop
 
 ## Theme palette
 
-The site uses a custom palette (`forest`, `honey`, `cream`, `ink`) defined in `tailwind.config.js`. The dark mode pulls a deep forest/ink background with honey accents; light mode is a cream/forest pairing.
+The `forest-*` and `cream-*` palettes in `tailwind.config.js` read CSS variables from `src/index.css`.
+Green, Blue and Surprise use the original values; the Hivetz theme (`html.brand`) remaps them to the
+logo's wordmark blue (#005698) with orange (#F49B0F) accents and the six molecule colours. The full-colour
+artwork is shared with Surprise; `useTheme().art()` renders only the current theme's image.
 
-## Notes
+## Content
 
-- All product names, copy, taglines, and chat scripts are original content authored for Hivetz Nutri.
-- Replace `+91 98765 43210` and `enquiry@hivetznutri.com` with real contact details before going live.
-- Wire `EnquiryModal.handleSubmit` to your backend (or a service like Formspree / Netlify Forms) when ready.
+Every claim comes from the Hivetz *Product Information Centre* brochure and exhibition poster, the
+florabiochem.com pages, or contact details supplied by the client. Nothing else goes on the site.
+Products live in `src/data/products.ts`, founders in `src/data/founders.ts`, the brochure Q&A in
+`src/data/demoChat.ts`.
+
+## Images
+
+Site images are WebP in `public/`. The original PNG artwork is kept in `art-src/` (not deployed).
+
+## Deploy
+
+Vercel project `hivetz-nutri`, connected to this repo: every push to `master` deploys to
+https://hivetz-nutri.vercel.app, and other branches get preview URLs.
+`VITE_PLANT_URL` (set in Vercel) points the "Our Plant" links at the 3D tour, https://hivetz-plant.vercel.app.
