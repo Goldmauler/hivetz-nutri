@@ -22,7 +22,6 @@ const LINKS = {
     { label: 'About Us',             href: '#about' },
     { label: 'Our Plant · 3D tour',  href: PLANT_URL },
     { label: 'Contact',              href: '#contact' },
-    { label: 'Founders',             href: '/founders' },
   ],
 };
 

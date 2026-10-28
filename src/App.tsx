@@ -17,7 +17,6 @@ import EnquiryModal from './components/EnquiryModal';
 import FloatingActions from './components/FloatingActions';
 
 import AllProductsPage from './pages/AllProductsPage';
-import FoundersPage from './pages/FoundersPage';
 import PageTransition from './components/PageTransition';
 
 function HomePage() {
@@ -84,7 +83,6 @@ export default function App() {
       <Routes>
         <Route path="/"           element={<HomePage />} />
         <Route path="/products"   element={<AllProductsPage />} />
-        <Route path="/founders"   element={<FoundersPage />} />
       </Routes>
     </>
   );

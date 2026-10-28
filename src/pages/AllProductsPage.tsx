@@ -54,9 +54,9 @@ function HeroSection({ isSurprise }: { isSurprise: boolean }) {
           </h1>
           <p className={`mt-4 max-w-xl leading-relaxed
             ${isSurprise ? 'text-[#5C2D0A]/80' : 'text-forest-900/80 dark:text-honey-700/80'}`}>
-            {products.length} SKUs across premixes, feed additives, anti
-            coccidials, disinfectants and specialty ingredients — every one
-            manufactured in-house and batch-tested.
+            {products.length} products: the premixes we manufacture, Hivetz feed
+            additives and farm disinfectants, and the anticoccidials and
+            speciality ingredients we supply.
           </p>
         </motion.div>
       </div>

@@ -53,8 +53,8 @@ export default function Products({ onEnquire }: Props) {
             </h2>
           </div>
           <p className="max-w-sm text-sm text-forest-900 dark:text-honey-700/70 leading-relaxed">
-            Every SKU manufactured in-house, batch-tested, and traceable
-            from raw material to dispatch.
+            Premixes made in our own plants and tested by HPLC, alongside
+            Hivetz additives, disinfectants and the ingredients we supply.
           </p>
         </motion.div>
 

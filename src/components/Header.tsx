@@ -11,7 +11,6 @@ const NAV = [
   { label: 'Home',     href: '/',         hash: ''        },
   { label: 'Products', href: '/products', hash: ''        },
   { label: 'About',    href: '/',         hash: 'about'   },
-  { label: 'Founders', href: '/founders', hash: ''        },
   { label: 'R&D',      href: '/',         hash: 'rnd'     },
   { label: 'Contact',  href: '/',         hash: 'contact' },
 ];
